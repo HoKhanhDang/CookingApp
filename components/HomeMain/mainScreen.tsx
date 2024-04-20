@@ -11,15 +11,15 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 
-import showRecipeScreen from '../Recipe/showRecipe';
-import seeMoreScreen from './seeMoreScreen';
+import showRecipeScreen from '../Recipe/ShowRecipe';
+import seeMoreScreen from './SeeMoreScreen';
 import Recipes from '../Recipe/Recipe';
-import searchScreen from '../Search/searchScreen';
-import seeMoreTips from '../Tips/seeMoreTips';
-import preparationDetail from '../Recipe/preparationDetail';
+import searchScreen from '../Search/SearchScreen';
+import seeMoreTips from '../Tips/SeeMoreTips';
+import preparationDetail from '../Recipe/PreparationDetail';
 
 const RecipesList = [
-  {
+  { 
     recipeName: 'Gà chiên hương thảo',
     recipeImage: require('../../assets/icons/ga.png'),
   },
@@ -50,9 +50,7 @@ const RecipesList = [
   },
 ];
 
-
-
-class mainScreen extends Component {
+class MainScreen extends Component {
   render() {
     return (
       <View style={[styles.conMain]}>
@@ -87,7 +85,6 @@ class mainScreen extends Component {
             </TouchableOpacity>
           </View>
 
-         
           <View style={[styles.conEachRow]}>
             <View style={[styles.conTitle]}>
               <Text style={[styles.textTitle]}>Trending</Text>
@@ -175,7 +172,7 @@ export default class Main extends Component {
       <Stack.Navigator>
         <Stack.Screen
           name="mainScreens"
-          component={mainScreen}
+          component={MainScreen}
           options={{
             navigation: this.props.navigation,
             headerStyle: {

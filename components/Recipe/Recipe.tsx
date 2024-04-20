@@ -7,7 +7,7 @@ import {
   View,
   Image,
 } from 'react-native';
-import mainScreen from '../HomeMain/mainScreen';
+import mainScreen from '../HomeMain/MainScreen';
 
 export type recipesInfo = {
   recipeName: string;

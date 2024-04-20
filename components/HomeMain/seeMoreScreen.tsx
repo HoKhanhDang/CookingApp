@@ -9,6 +9,9 @@ import {
   View,
 } from 'react-native';
 import Recipes from '../Recipe/Recipe';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import showRecipeScreen from '../Recipe/ShowRecipe';
 
 const RecipesList = [
   {
@@ -55,6 +58,7 @@ class SeeMore extends React.Component {
                 key={index}
                 recipeName={recipe.recipeName}
                 recipeImage={recipe.recipeImage}
+                navigation={this.props.navigation}
               />
             ))}
           </ScrollView>
@@ -62,6 +66,38 @@ class SeeMore extends React.Component {
     );
   }
 }
+
+const Stack = createNativeStackNavigator();
+export default class SeeMoreDetail extends React.Component{
+  render(){
+    return(
+        <Stack.Navigator>
+          <Stack.Screen
+            name="countScreen"
+            component={SeeMore}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
+            name="showRecipeScreen"
+            component={showRecipeScreen}
+            options={{
+              navigation: this.props.navigation,
+              headerStyle: {
+                backgroundColor: '#F87469',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+        </Stack.Navigator>
+    );
+  }
+}
+
 
 const styles = StyleSheet.create({
   //text
@@ -92,4 +128,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SeeMore;

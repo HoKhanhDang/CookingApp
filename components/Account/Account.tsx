@@ -1,21 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {  Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
-import Recipes from '../Recipe/Recipe';
+import account_savedRecipes from './Acount_savedRecipes';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function Account(): React.JSX.Element {
+
+class Account extends Component {
+  render() {
   return (
     <View>
-      <View style={[styles.conHeader]}>
-        <Image
-          style={[styles.icon]}
-          source={require('../../assets/icons/logo.png')}
-        />
-
-        <Image
-          style={[styles.icon]}
-          source={require('../../assets/icons/menu.png')}
-        />
-      </View>
+      
       <View style={[styles.conMain]}>
         <View style={[styles.conTop]}>
             <Image 
@@ -31,6 +26,12 @@ function Account(): React.JSX.Element {
         <View style={[styles.conBot]}>
             <View style={[styles.conSave]}>
                 <Text style={[styles.textNomo, styles.margin]}>Saved Recipes</Text>
+                <TouchableOpacity
+                  style={[{margin: 10}]}
+                  onPress={() => this.props.navigation.navigate('SeemoreScreen')}
+                >
+                  <Text style={[{margin: 10, color: 'blue'}]}>See more</Text>
+                </TouchableOpacity>
             </View>
             <View>
                 <TouchableOpacity style={[styles.touchOpa]}>
@@ -47,6 +48,35 @@ function Account(): React.JSX.Element {
       </View>
     </View>
   );
+}
+}
+
+const Stack = createNativeStackNavigator();
+export default class AccountStack extends Component{
+  render() {
+  return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="AccountScreen"
+          component={Account}
+          
+        />
+        <Stack.Screen
+          name="SeemoreScreen"
+          component={account_savedRecipes}
+          options={{ title: 'Saved Reicipes', 
+          headerStyle: {
+            backgroundColor: '#F87469',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          }}
+        />
+      </Stack.Navigator>
+  );
+}
 }
 
 const styles = StyleSheet.create({
@@ -90,7 +120,9 @@ const styles = StyleSheet.create({
   conSave:{
     margin: 10,
     width: '100%',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   margin:{
     marginLeft: 20,
@@ -124,4 +156,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Account;
