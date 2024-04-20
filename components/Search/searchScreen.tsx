@@ -59,7 +59,7 @@ const RecipesList = [
   },
 ];
 
-export default class searchScreen extends Component {
+export default class SearchScreen extends Component {
   render(): ReactNode {
     return (
       <View>

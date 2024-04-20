@@ -10,7 +10,7 @@ import {
 import {Icon, Image, ListItem} from 'react-native-elements';
 import Tips from '../Tips/Tip';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import seeMoreTips from '../Tips/seeMoreTips';
+import seeMoreTips from '../Tips/SeeMoreTips';
 
 const windowWidth = Dimensions.get('window').width - 30;
 
@@ -247,7 +247,8 @@ const RecipesList = [
 ];
 
 class RelateRecipes extends Component {
-  render(): ReactNode {
+  render() {
+    const navigation = this.props.navigation;
     return (
       <View style={{flex: 1, flexDirection: 'column', height: 'auto'}}>
         <Text style={[styles.textTitle, {paddingVertical: 20}]}>
@@ -255,7 +256,7 @@ class RelateRecipes extends Component {
         </Text>
         <ScrollView horizontal={true} contentContainerStyle={[styles.scroll]}>
           {RecipesList.map((recipe, index) => (
-            <View key={index} style={styles.relateRecipes}>
+            <TouchableOpacity key={index} style={styles.relateRecipes}>
               <View style={{flex: 7}}>
                 <Image
                   style={{width: 150, height: 150}}
@@ -266,7 +267,7 @@ class RelateRecipes extends Component {
               <Text style={[styles.textNomal, {flex: 4, fontWeight: 'bold'}]}>
                 {recipe.recipeName}
               </Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       </View>

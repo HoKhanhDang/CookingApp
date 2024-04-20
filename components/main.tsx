@@ -19,12 +19,11 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import Account from './Account/Account';
 import Cart from './Cart/Cart';
-import Mainn from './HomeMain/mainScreen';
+import Mainn from './HomeMain/MainScreen';
 import {Component} from 'react';
 
 //const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
-
 export default class App extends Component {
   render() {
     return (
