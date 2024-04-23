@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   ScrollView,
@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import showRecipeScreen from '../Recipe/ShowRecipe';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 type recipe = {
     nameRecipe: String;
@@ -17,37 +19,35 @@ type recipe = {
 const RecipesList = [
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
     deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
     deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
+    deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
+    deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
+    deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
+    deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
+    deleteImage: require('../../assets/icons/delete.png'),
   },
   {
     recipeName: 'Gà chiên hương thảo',
-    //recipeImage: require('../../assets/icons/ga.png'),
+    deleteImage: require('../../assets/icons/delete.png'),
   },
 ];
 
@@ -68,22 +68,50 @@ function SavedRecipe({nameRecipe, deleteImage}: recipe): React.JSX.Element {
       );
   }
 
-function Account_savedRecipes(): React.JSX.Element {
-
+class Account_savedRecipes extends React.Component{
+render(){
     return (
         <View style={[styles.conMain]}>
           <ScrollView contentContainerStyle={[styles.scroll]}>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
-            <SavedRecipe nameRecipe={RecipesList[0].recipeName} deleteImage={RecipesList[0].deleteImage}/>
+          {RecipesList.map((recipe, index) => (
+            <SavedRecipe
+              key={index}
+              nameRecipe={recipe.recipeName}
+              deleteImage={recipe.deleteImage}
+              navigation={this.props.navigation}
+            />
+          ))}
           </ScrollView>
         </View>
     );
-  
+  }
+}
+const Stack = createNativeStackNavigator();
+export default class Account_savedRecipes_Na extends Component{
+  render(){
+    return(
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Account_savedRecipes"
+          component={Account_savedRecipes}
+        />
+        <Stack.Screen
+          name="showRecipeScreen"
+          component={showRecipeScreen}
+          options={{
+            navigation: this.props.navigation,
+            headerStyle: {
+              backgroundColor: '#F87469',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+          />
+      </Stack.Navigator>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -133,4 +161,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Account_savedRecipes;
