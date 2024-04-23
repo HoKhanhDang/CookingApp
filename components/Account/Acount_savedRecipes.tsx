@@ -51,10 +51,12 @@ const RecipesList = [
   },
 ];
 
-function SavedRecipe({nameRecipe, deleteImage}: recipe): React.JSX.Element {
-      return (
-          <View style={[styles.conRecipe]}>
-            <TouchableOpacity style={[styles.touchName]}>
+class SavedRecipe extends Component<recipe>{
+  render() {
+    const {nameRecipe, deleteImage, navigation} = this.props;
+    return (
+      <View style={[styles.conRecipe]}>
+            <TouchableOpacity style={[styles.touchName]} onPress={() => navigation.navigate('showRecipeScreen')}>
             <Text style={[styles.textNomal]}>{nameRecipe}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
@@ -65,8 +67,9 @@ function SavedRecipe({nameRecipe, deleteImage}: recipe): React.JSX.Element {
             </TouchableOpacity>
             
           </View>
-      );
+    );
   }
+}
 
 class Account_savedRecipes extends React.Component{
 render(){
