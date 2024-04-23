@@ -4,7 +4,7 @@ import account_savedRecipes from './Acount_savedRecipes';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import showRecipeScreen from '../Recipe/ShowRecipe';
 
 class Account extends Component {
   render() {
@@ -28,19 +28,22 @@ class Account extends Component {
                 <Text style={[styles.textNomo, styles.margin]}>Saved Recipes</Text>
                 <TouchableOpacity
                   style={[{margin: 10}]}
-                  onPress={() => this.props.navigation.navigate('SeemoreScreen')}
+                  onPress={() => this.props.navigation.navigate('account_savedRecipes')}
                 >
                   <Text style={[{margin: 10, color: 'blue'}]}>See more</Text>
                 </TouchableOpacity>
             </View>
             <View>
-                <TouchableOpacity style={[styles.touchOpa]}>
+                <TouchableOpacity style={[styles.touchOpa]}
+                onPress={() => this.props.navigation.navigate('showRecipeScreen')}>
                     <Text style={[styles.textNomo]}>Recipe</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.touchOpa]}>
+                <TouchableOpacity style={[styles.touchOpa]}
+                onPress={() => this.props.navigation.navigate('showRecipeScreen')}>
                     <Text style={[styles.textNomo]}>Recipe</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.touchOpa]}>
+                <TouchableOpacity style={[styles.touchOpa]}
+                onPress={() => this.props.navigation.navigate('showRecipeScreen')}>
                     <Text style={[styles.textNomo]}>Recipe</Text>
                 </TouchableOpacity>
             </View>
@@ -62,9 +65,10 @@ export default class AccountStack extends Component{
           
         />
         <Stack.Screen
-          name="SeemoreScreen"
+          name="account_savedRecipes"
           component={account_savedRecipes}
-          options={{ title: 'Saved Reicipes', 
+          options={{
+          headerShown: false,
           headerStyle: {
             backgroundColor: '#F87469',
           },
@@ -74,7 +78,21 @@ export default class AccountStack extends Component{
           },
           }}
         />
-      </Stack.Navigator>
+        <Stack.Screen
+          name="showRecipeScreen"
+          component={showRecipeScreen}
+          options={{
+            navigation: this.props.navigation,
+            headerStyle: {
+              backgroundColor: '#F87469',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+          />
+        </Stack.Navigator>
   );
 }
 }
