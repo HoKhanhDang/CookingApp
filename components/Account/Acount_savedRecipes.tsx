@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import showRecipeScreen from '../Recipe/ShowRecipe';
+import showRecipeScreen from '../Recipe/showRecipe';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 type recipe = {

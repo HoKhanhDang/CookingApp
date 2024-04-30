@@ -1,26 +1,16 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {
-  Alert,
-  Button,
-  Dimensions,
-  FlatList,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
 } from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Image} from 'react-native-elements';
-import api from '../api/api.js';
 import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-
-import Account from './Account/Account';
+import Account from './Account/AccountRoute';
 import Cart from './Cart/Cart';
-import Mainn from './HomeMain/MainScreen';
+import Home from './HomeMain/Home';
 import {Component} from 'react';
+import HomeRoute from './HomeMain/HomeRoute';
 
 //const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -41,7 +31,7 @@ export default class App extends Component {
             }}>
             <Tab.Screen
               name="Main"
-              component={Mainn}
+              component={HomeRoute}
               options={{
                 tabBarLabel: null,
                 tabBarIcon: ({color}) => (

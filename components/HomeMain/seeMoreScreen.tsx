@@ -11,7 +11,7 @@ import {
 import Recipes from '../Recipe/Recipe';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import showRecipeScreen from '../Recipe/ShowRecipe';
+import showRecipeScreen from '../Recipe/showRecipe';
 
 const RecipesList = [
   {

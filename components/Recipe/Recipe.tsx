@@ -7,26 +7,24 @@ import {
   View,
   Image,
 } from 'react-native';
-import mainScreen from '../HomeMain/MainScreen';
+import mainScreen from '../HomeMain/Home';
 
 export type recipesInfo = {
   recipeName: string;
   recipeImage: any;
 };
 
-class Recipes extends Component<recipesInfo> {
-  render() {
-    const {recipeName, recipeImage, navigation} = this.props;
-    return (
-      <TouchableOpacity
-        style={[styles.con]}
-        onPress={() => navigation.navigate('detail')}>
-        <Image style={[styles.image]} source={recipeImage} />
-        <Text style={[styles.text]}>{recipeName}</Text>
-      </TouchableOpacity>
-    );
-  }
-}
+export default function Recipes({ recipeName, recipeImage, navigation }) {
+  return (
+    <TouchableOpacity
+      style={[styles.con]}
+      onPress={() => navigation.navigate('detail')}
+    >
+      <Image style={[styles.image]} source={recipeImage} />
+      <Text style={[styles.text]}>{recipeName}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   con: {
@@ -46,4 +44,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-export default Recipes;

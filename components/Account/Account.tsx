@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import {  Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import {  Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import account_savedRecipes from './Acount_savedRecipes';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import showRecipeScreen from '../Recipe/ShowRecipe';
+import showRecipeScreen from '../Recipe/showRecipe';
 
-class Account extends Component {
+export default class Account extends Component {
   render() {
   return (
-    <View>
-      
+    <View> 
       <View style={[styles.conMain]}>
         <View style={[styles.conTop]}>
             <Image 
@@ -50,49 +47,6 @@ class Account extends Component {
         </View>
       </View>
     </View>
-  );
-}
-}
-
-const Stack = createNativeStackNavigator();
-export default class AccountStack extends Component{
-  render() {
-  return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="AccountScreen"
-          component={Account}
-          
-        />
-        <Stack.Screen
-          name="account_savedRecipes"
-          component={account_savedRecipes}
-          options={{
-          headerShown: false,
-          headerStyle: {
-            backgroundColor: '#F87469',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          }}
-        />
-        <Stack.Screen
-          name="showRecipeScreen"
-          component={showRecipeScreen}
-          options={{
-            navigation: this.props.navigation,
-            headerStyle: {
-              backgroundColor: '#F87469',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-          />
-        </Stack.Navigator>
   );
 }
 }
