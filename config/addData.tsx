@@ -124,7 +124,7 @@ export default function App() {
   }
 
 
-  //in ra danh sách các món ăn
+  //lấy ra danh sách các món ăn
   async function getCourses() {
     try {
       const citiesCol = collection(db, "courses");
@@ -137,6 +137,8 @@ export default function App() {
     }
   }
 
+
+  //in ra danh sách các bước thực hiện theoo id của courses
   async function getFilteredCourses(courseID) {
     const citiesRef = collection(db, "courses");
     const q = query(citiesRef, where("id", "==", courseID));
@@ -147,7 +149,6 @@ export default function App() {
     console.log(cities);
 
   }
-
 
   useEffect(() => {
     getFilteredCourses(2);
