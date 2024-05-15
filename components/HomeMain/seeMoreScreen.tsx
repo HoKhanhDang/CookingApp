@@ -1,103 +1,68 @@
 import React from 'react';
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import Recipes from '../Recipe/Recipe';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import showRecipeScreen from '../Recipe/showRecipe';
+
 
 const RecipesList = [
   {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
+    "id": 1,
+    "name": "Spaghetti Carbonara",
+    "category": "Italian",
+    "detailContent": "A classic Italian pasta dish made with eggs, cheese, bacon, and pepper.",
+    "like": 100,
+    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/1.jpg?alt=media&token=8bf357c6-b1ba-4c4c-b7cf-431c67492895"},
   {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
+    "id": 2,
+    "name": "Chicken Curry",
+    "category": "Indian",
+    "detailContent": "A flavorful Indian dish made with chicken, curry spices, and coconut milk.",
+    "like": 150,
+    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/2.jpg?alt=media&token=ff822dc4-4839-4205-9926-0281a4253678"},
   {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
+    "id": 3,
+    "name": "Taco Salad",
+    "category": "Mexican",
+    "detailContent": "A fresh and crunchy salad featuring taco-seasoned ground beef, lettuce, tomatoes, cheese, and tortilla chips.",
+    "like": 80,
+    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/3.jpg?alt=media&token=224fa62b-efba-48cb-b4eb-78c623da19e8"},
   {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
+    "id": 4,
+    "name": "Sushi Rolls",
+    "category": "Japanese",
+    "detailContent": "Delicious sushi rolls filled with rice, seafood, vegetables, and nori.",
+    "like": 120,
+    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/4.jpg?alt=media&token=dca68982-870d-4f95-9131-23492b34151e" },
   {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
-  {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
-  {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
-  {
-    recipeName: 'Gà chiên hương thảo',
-    recipeImage: require('../../assets/icons/ga.png'),
-  },
+    "id": 5,
+    "name": "Chocolate Cake",
+    "category": "Dessert",
+    "detailContent": "Decadent chocolate cake made with rich cocoa powder, butter, sugar, and eggs.",
+    "like": 200,
+    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/5.jpg?alt=media&token=2b4896c7-f030-41ef-9c28-626fa79b91a5"}
 ];
-class SeeMore extends React.Component {
-  render() {
-    return (
-        <View style={[styles.conMain]}>
-          <Text style={[styles.textTitle]}>Trending</Text>
-          <ScrollView contentContainerStyle={[styles.scroll]}>
-            {RecipesList.map((recipe, index) => (
-              <Recipes
-                key={index}
-                recipeName={recipe.recipeName}
-                recipeImage={recipe.recipeImage}
-                navigation={this.props.navigation}
-              />
-            ))}
-          </ScrollView>
-        </View>
-    );
-  }
-}
 
-const Stack = createNativeStackNavigator();
-export default class SeeMoreDetail extends React.Component{
-  render(){
-    return(
-        <Stack.Navigator>
-          <Stack.Screen
-            name="countScreen"
-            component={SeeMore}
-            options={{
-              headerShown: false
-            }}
+export default function SeeMore({navigation}) {
+  return (
+    <View>
+      <Text style={[styles.textTitle]}>Trending</Text>
+      <ScrollView contentContainerStyle={[styles.scroll]}>
+        {RecipesList.map((recipe, index) => (
+          <Recipes
+            key={index}
+            recipeName={recipe.name}
+            recipeImage={recipe.img}
+            navigation={navigation}
           />
-          <Stack.Screen
-            name="showRecipeScreen"
-            component={showRecipeScreen}
-            options={{
-              navigation: this.props.navigation,
-              headerStyle: {
-                backgroundColor: '#F87469',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}
-          />
-        </Stack.Navigator>
-    );
-  }
-}
-
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   //text
@@ -114,12 +79,6 @@ const styles = StyleSheet.create({
   textNomal: {
     fontSize: 15,
     color: 'black',
-  },
-
-  conMain: {
-    padding: 10,
-    marginBottom:60
-
   },
   scroll: {
     flexWrap: 'wrap',

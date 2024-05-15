@@ -20,7 +20,7 @@ export default function Recipes({ recipeName, recipeImage, navigation }) {
       style={[styles.con]}
       onPress={() => navigation.navigate('detail')}
     >
-      <Image style={[styles.image]} source={recipeImage} />
+      <Image style={[styles.image]} source={{uri:recipeImage}} />
       <Text style={[styles.text]}>{recipeName}</Text>
     </TouchableOpacity>
   );
