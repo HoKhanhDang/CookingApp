@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 
 import Recipes from '../Recipe/Recipe';
+import "firebase/firestore";
+import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where, orderBy} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from '../../firebase/firebase';
 
 const RecipesList = [
   {
@@ -50,6 +54,21 @@ const RecipesList = [
 ];
 
 export default function MainScreen({navigation}) {
+  const [cities, setCities] = useState([]);
+  async function getCourses() {
+    try {
+      const citiesCol = collection(db, "courses");
+      const citySnapshot = await getDocs(citiesCol);
+      const cityList = citySnapshot.docs.map((doc) => doc.data());
+      setCities(cityList);
+      console.log(cities);
+    } catch (e) {
+      console.error("Error getting cities", e);
+    }
+  }
+  useEffect(() => {
+    getCourses();
+  }, []);
   return (
     <View style={[styles.conMain]}>
       <ScrollView>
@@ -94,12 +113,13 @@ export default function MainScreen({navigation}) {
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             contentContainerStyle={[styles.scroll]}>
-            {RecipesList.map((recipe, index) => (
+            {cities.map((citie, index) => (
               <Recipes
-                key={index}
-                recipeName={recipe.name}
-                recipeImage={recipe.img}
+                key={citie.id}
+                recipeName={citie.name}
+                recipeImage={citie.img}
                 navigation={navigation}
+                id={citie.id}
               />
             ))}
           </ScrollView>

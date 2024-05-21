@@ -1,3 +1,4 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
 import React from 'react';
 import {
   Image,
@@ -5,8 +6,13 @@ import {
   Text,
   View,
 } from 'react-native';
-
+type RootStackParamList = {
+  detail: { content: string , img: any};
+};
+type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'detail'>;
 const MainPreparationDetail = () => {
+  const route = useRoute<DetailRecipeRouteProp>();
+  const { content, img } = route.params;
   return (
     <View>
       <View style={[styles.conMain]}>
@@ -15,11 +21,12 @@ const MainPreparationDetail = () => {
           <View style={[styles.conColor]}>
             <Image
               style={[styles.pic]}
-              source={require('../../assets/icons/ga.png')}
+              source={{
+                uri: img,
+              }}
             />
             <Text style={[styles.stepDetail]}>
-              let cook a good dinner nnnnnnnnnnnnnnnnnn jjjjjj jjj hhhhhhhh
-              hhhh hhh
+              {content}
             </Text>
           </View>
         </View>
