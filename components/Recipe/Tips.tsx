@@ -46,8 +46,8 @@ export default function TipsScreen({navigation}){
                     <Text>See more</Text>
                 </TouchableOpacity>
             </View>
-            <Tips id={tips[0].id} content={tips[0].content} name={tips[0].name}/>
-            <Tips id={tips[1].id} content={tips[1].content} name={tips[1].name}/>
+            {/* <Tips id={tips[0].id} content={tips[0].content} name={tips[0].name}/>
+            <Tips id={tips[1].id} content={tips[1].content} name={tips[1].name}/> */}
         </View>
     );
 };
