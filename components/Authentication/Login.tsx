@@ -32,34 +32,6 @@ export default function Login ({navigation}) {
 
     const auth = FIREBASE_AUTH;
 
-    const onGoogleButtonPress = async () =>{
-        // Get the users ID token
-        const { idToken } = await GoogleSignin.signIn();
-      
-        // Create a Google credential with the token
-        const googleCredential = GoogleAuthProvider.credential(idToken);
-      
-        // Sign-in the user with the credential
-        return signInWithCredential(auth,googleCredential);
-    }
-
-    const loginGoogle = async () => {
-        setIsLoading(true);
-        try {
-            const provider = new GoogleAuthProvider();
-            await signInWithPopup(auth, provider);
-            setIsLoading(false);
-            setIsError(false);
-        } catch (error) {
-            console.log(error);
-            setIsError(true);
-            setIsLoading(false);
-        }
-        finally {
-            setIsLoading(false);
-        }       
-    }
-
     const login = async () => {
         setIsLoading(true);
         try {
@@ -149,25 +121,8 @@ export default function Login ({navigation}) {
                             <Text style={[styles.text,{fontWeight:"bold",color:"grey"}]}>Sign up</Text>
                         </TouchableOpacity>           
                     </View>
-                    
-                    <View style={[styles.components,{alignItems:"center"}]}>
-                        <Text style={[{fontSize:12,color:"white"}]}>Or sign in with</Text>
-                    </View>
-                    
-                    <View style={[styles.components,styles.loginMethod,{alignItems:'center'}]}>
-                        <TouchableOpacity onPress={()=>onGoogleButtonPress()}> 
-                            <Image
-                                style={[{height:40,width:40 }]}
-                                source={require('../../assets/icons/google.png')}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity> 
-                            <Image
-                                style={[{height:40,width:40 }]}
-                                source={require('../../assets/icons/facebook.png')}
-                            />
-                        </TouchableOpacity>
-                    </View>
+
+                 
 
                 </>
             )

@@ -146,8 +146,8 @@ export default function App() {
 
     const citisnapshot = await getDocs(citiesRef);
     const cities = querySnapshot.docs.map((doc) => doc.data());
+    
     console.log(cities);
-
   }
 
   useEffect(() => {

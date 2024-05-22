@@ -1,54 +1,141 @@
-import React, { Component } from 'react';
-import {  Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import React, { Component, createContext, useContext, useEffect, useState } from 'react';
+import {  Dimensions, Image, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions,} from 'react-native';
 import account_savedRecipes from './Acount_savedRecipes';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import showRecipeScreen from '../Recipe/showRecipe';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { ScrollView } from 'react-native-gesture-handler';
+import EditAccount from './EditAccount';
 
-export default class Account extends Component {
-  render() {
+const windowWidth = Dimensions.get('window').width;
+
+import { useNavigation } from '@react-navigation/native';
+
+import { UserContextInsideScreen } from '../Authentication/InsideScreen';
+
+const stack = createNativeStackNavigator();
+
+function ShowRecipe() {
   return (
-    <View> 
-      <View style={[styles.conMain]}>
-        <View style={[styles.conTop]}>
+    <View style={styles.showRecipe}>
+        <View style={{height:'70%',alignItems:'center'}}>
             <Image 
-            style={[styles.picture]}
-            source={require('../../assets/icons/profile.png')}
+              style={{height: 170, width: 170,borderRadius: 5}}
+              source={require('../../assets/icons/ga.png')}
             />
-            <Text style={[styles.textName]}>Name</Text>
-            <View style={[styles.conOfLike]}>
-                <Text style={[styles.textNomo]}>Like: 0</Text>
-                <Text style={[styles.textNomo, styles.margin]}>Cart: 1</Text>
-            </View>
         </View>
-        <View style={[styles.conBot]}>
-            <View style={[styles.conSave]}>
-                <Text style={[styles.textNomo, styles.margin]}>Saved Recipes</Text>
-                <TouchableOpacity
-                  style={[{margin: 10}]}
-                  onPress={() => this.props.navigation.navigate('account_savedRecipes')}
-                >
-                  <Text style={[{margin: 10, color: 'blue'}]}>See more</Text>
-                </TouchableOpacity>
-            </View>
-            <View>
-                <TouchableOpacity style={[styles.touchOpa]}
-                onPress={() => this.props.navigation.navigate('showRecipeScreen')}>
-                    <Text style={[styles.textNomo]}>Recipe</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.touchOpa]}
-                onPress={() => this.props.navigation.navigate('showRecipeScreen')}>
-                    <Text style={[styles.textNomo]}>Recipe</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.touchOpa]}
-                onPress={() => this.props.navigation.navigate('showRecipeScreen')}>
-                    <Text style={[styles.textNomo]}>Recipe</Text>
-                </TouchableOpacity>
-            </View>
+        <View style={{height:'30%',padding:5}}>
+            <Text style={styles.textRecipe}>Recipe sadasd Nasadasdsameasdsadsad</Text>
         </View>
-      </View>
     </View>
   );
 }
+
+function tab1({navigation}) {
+  return (
+          <>     
+              <ScrollView style={styles.scrollRecipes}>               
+                  <View style={styles.wrap}>
+                      <ShowRecipe />    
+                      <ShowRecipe />
+                      <ShowRecipe />                            
+                  </View>
+                    
+                  
+              </ScrollView>
+          </>         
+  );
+}
+function tab2() { 
+  return (
+          <>     
+              <ScrollView style={styles.scrollRecipes}>               
+                  <View style={styles.wrap}>
+                      <ShowRecipe />    
+                      <ShowRecipe />
+                      <ShowRecipe />                            
+                  </View>
+                                 
+              </ScrollView>
+          </>   
+  );
+}
+
+
+const renderTabBar = props => (
+  <TabBar
+    {...props}
+    indicatorStyle={{ backgroundColor: 'pink' }}
+    style={{ backgroundColor: 'black' }}
+  />
+);
+
+const renderScene = SceneMap({
+  first: tab1,
+  second: tab2,
+});
+
+
+
+function Account({navigation}){
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'first', title: 'Saved' },
+    { key: 'second', title: 'Liked' },
+  ]);
+
+  const navigationn = useNavigation();
+
+  
+  const userContext = useContext(UserContextInsideScreen);
+ 
+  return (
+      
+      <View style={[styles.conMain]}>
+        
+        <View style={[styles.conTop]}>
+            <Image 
+              style={[styles.picture]}
+              source={{uri: userContext.avatar}}
+            />
+       
+            <Text style={[styles.textName,styles.text]}>{userContext.name}</Text>
+            <View style={[styles.conOfLike]}>
+                <Text style={[styles.textNomo,styles.text]}>Like: 0</Text>
+                <Text style={[styles.textNomo,styles.text, styles.margin]}>Cart: 1</Text>
+            </View>
+            <TouchableOpacity style={{position: 'absolute',top: 30, right: 50}} onPress={()=>navigationn.navigate('EditAccount')}>
+              <Image 
+              style={[{width: 50, height: 50}]}
+              source={require('../../assets/icons/setting.png')}
+              />
+            </TouchableOpacity>
+            
+        </View>
+
+        <View style={[styles.conBot]}>   
+            <TabView
+              renderTabBar={renderTabBar}
+              navigationState={{ index, routes }}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              initialLayout={{ width: Dimensions.get('window').width  }}
+              style={{backgroundColor: 'white',width: '100%', height: '100%'}}
+            />
+        </View>
+      </View>
+  );
+
+}
+
+export default function AccountStack() {
+  return (
+    <stack.Navigator >
+      <stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
+      <stack.Screen name="EditAccount" component={EditAccount} />
+    </stack.Navigator>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,18 +153,28 @@ const styles = StyleSheet.create({
   },
   search:{
     fontSize: 18,
-    color: 'black',
+    color: 'white',
     borderRadius: 45,
     backgroundColor: 'white',
   },
   conMain:{
+    flexDirection: 'column',
+    flex: 1,
     width: '100%',
-    height: '84%',
+    height: '100%',
+    backgroundColor: 'white',
+
   },
   conTop:{
-    height: 260,
+    height:'40%',
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopColor: 'black',
+    borderStartWidth: 1,
+    borderEndWidth: 1,
+    borderTopStartRadius: 100,
+    borderTopEndRadius: 100,
+    backgroundColor: 'black',
   },
   conOfLike:{
     flexDirection: 'row',
@@ -87,7 +184,16 @@ const styles = StyleSheet.create({
     width: 150,
   },
   conBot:{
+    height: '60%',
+    width: '100%',
     alignItems: 'center',
+    backgroundColor: 'white',
+    borderTopColor: 'black',
+    borderStartWidth: 1,
+    borderEndWidth: 1,
+    borderEndStartRadius: 100,
+    borderEndEndRadius: 100,
+
   },
   conSave:{
     margin: 10,
@@ -112,11 +218,20 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 28,
     fontWeight: '600',
+    marginVertical: 10,
+  },
+  text:{
+    color: 'white',
   },
   textNomo:{
     color: 'black',
     fontSize: 20,
     fontWeight: '600',
+  },
+  textRecipe:{
+    color: 'white',
+    fontSize: 18,
+    alignSelf: 'flex-start',
   },
   conFooter:{
     flexDirection: 'row',
@@ -125,6 +240,27 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '8%',
     backgroundColor: '#fa9e51'
-  }
+  },
+  scrollRecipes:{
+    flex:1,
+    width: '100%',
+    padding: 10,
+    backgroundColor: 'black',
+  },
+  wrap:{
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent:'space-between',
+    width: '100%',
+  
+   
+  }, 
+  showRecipe:{
+    alignItems:'center',
+    width: (windowWidth/2)-15,
+    height: 250,
+    marginBottom: 15,
+  
+  },
 });
 

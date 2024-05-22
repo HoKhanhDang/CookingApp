@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile  } from 'firebase/auth';
 import React, { useState } from 'react';
 import {
     ActivityIndicator,
@@ -12,11 +12,17 @@ import {
 } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebase/firebase';
 
+import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where} from "firebase/firestore";
+import {FIREBASE_STORE} from '../../firebase/firebase';
+import { update } from 'firebase/database';
+
 export default function Register ({navigation}) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+
     const [isLoading, setIsLoading] = useState(false);
     const [isNullOrEmpty, setIsNullOrEmpty] = useState(false);
 
@@ -46,9 +52,24 @@ export default function Register ({navigation}) {
 
                 console.log(password);
                 await createUserWithEmailAndPassword(auth,email, password);
-                setIsLoading(false);
-                navigation.navigate('Login');
-                
+
+                updateProfile(auth.currentUser,{
+                    photoURL: 'https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/avatar.png?alt=media&token=04783c5f-b097-40f8-a6cf-13f454e1a382',
+                    displayName: name,
+                });
+
+        
+                const account = {
+                    'name': name,
+                    'email': email,
+                    'password': password,
+                    'avatar' : 'https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/avatar.png?alt=media&token=04783c5f-b097-40f8-a6cf-13f454e1a382',
+                }
+
+                const acc = collection(FIREBASE_STORE,'accounts');
+                await addDoc(acc,account);
+
+                setIsLoading(false);             
             }
             
         } catch (error) {
@@ -75,25 +96,7 @@ export default function Register ({navigation}) {
                     <View style={[styles.components]}>
                         <Text style={[styles.title,{justifyContent:"center"}]}>REGISTER</Text>
                     </View>
-                    <View style={[styles.components,styles.loginMethod,{alignItems:'center'}]}>
-                        <TouchableOpacity> 
-                            <Image
-                                style={[{height:40,width:40 }]}
-                                source={require('../../assets/icons/google.png')}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity> 
-                            <Image
-                                style={[{height:40,width:40 }]}
-                                source={require('../../assets/icons/facebook.png')}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.components}>
-                        <Text style={styles.navText}>
-                            or use your email address
-                        </Text>
-                    </View>
+                    
                     <View style={styles.components}>
                         <TextInput
                             style={styles.textInput}
