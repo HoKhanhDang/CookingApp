@@ -20,3 +20,5 @@ export const FIREBASE_STORE = getFirestore(app);
 export const FIREBASE_AUTH = getAuth(app);
 export const FIREBASE_DATABASE = getDatabase(app);
 export const FIREBASE_STORAGE = getStorage(app);
+
+export const db = getFirestore(app);
