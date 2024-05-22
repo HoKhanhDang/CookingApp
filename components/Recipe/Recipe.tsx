@@ -31,7 +31,7 @@ export default function Recipes({ recipeName, recipeImage, navigation, id}) {
 const styles = StyleSheet.create({
   con: {
     margin: 5,
-    height: 200,
+    height: 230,
     width: 180,
     justifyContent: 'space-around',
     alignItems: 'center',

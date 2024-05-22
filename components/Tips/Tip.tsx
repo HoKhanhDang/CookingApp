@@ -1,32 +1,37 @@
-import {Component} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
-export default class Tips extends Component {
-  render() {
-    return (
-      <View style={styles.tips}>
-        <View
-          style={{
-            flex: 3,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={styles.profileImage}
-            source={require('../../assets/icons/profile.png')}
-          />
-          <Text>Name</Text>
-        </View>
-        <View style={{flex: 5}}>
-          <Text style={[styles.textContent, {padding: 20}]}>
-            asdasdsadsadasdasdadada
-          </Text>
-        </View>
+export type recipesInfo = {
+  id: string;
+  name: any;
+  content: any;
+};
+
+const Tips = ({id, name, content}) => {
+  return (
+    <View style={styles.tips}>
+      <View
+        style={{
+          flex: 3,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          style={styles.profileImage}
+          source={require('../../assets/icons/profile.png')}
+        />
+        <Text>{name}</Text>
       </View>
-    );
-  }
-}
+      <View style={{ flex: 5 }}>
+        <Text style={[styles.textContent, { padding: 20 }]}>
+          {content}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   //tips
   tips: {
@@ -46,3 +51,5 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 });
+
+export default Tips;

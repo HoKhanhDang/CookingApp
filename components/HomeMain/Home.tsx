@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   conEachRow: {
     width: '100%',
-    height: 250,
+    height: 280,
     marginVertical:5
 
   },

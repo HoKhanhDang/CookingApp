@@ -25,6 +25,100 @@ export default function App() {
   const [cities, setCities] = useState([]);
   const [instructions, setInstructions] = useState([]);
 
+  async function addTips() {
+    const tips = [
+      {
+        "id": 1,
+        "recipeID": 1,
+        "email": "quan@gmail.com",
+        "name": "Quan",
+        "content": "Add a teaspoon of ground cardamom for a slight flavor variation!",
+      },
+      {
+        "id": 2,
+        "recipeID": 1,
+        "email": "dang@gmail.com",
+        "name": "Dang",
+        "content": "This is perfect, didnt change a thing and followed instructions step by step",
+      },
+      {
+        "id": 3,
+        "recipeID": 1,
+        "email": "minhquan31102003@gmail.com",
+        "name": "MinhQuan",
+        "content": "Put the dough in a warm place (like the microwave, TURNED OFF!!!!!) and it will rise even more!!",
+      },
+      {
+        "id": 4,
+        "recipeID": 2,
+        "email": "quan@gmail.com",
+        "name": "Quan",
+        "content": "I made this with chicken and it turned out great!",
+      },
+      {
+        "id": 5,
+        "recipeID": 2,
+        "email": "dang@gmail.com",
+        "name": "Dang",
+        "content": "oooooo looks yummm!!!",
+      },
+      {
+        "id": 6,
+        "recipeID": 2,
+        "email": "minhquan31102003@gmail.com",
+        "name": "MinhQuan",
+        "content": "It's really easy to do when you follow each step.",
+      },
+      {
+        "id": 7,
+        "recipeID": 3,
+        "email": "quan@gmail.com",
+        "name": "Quan",
+        "content": "Double the butter, heavy cream, garlic mixture add about 3-4 tbsp of garlic, add the sauce slowly until you reach the consistency you like your mashed potatoes",
+      },
+      {
+        "id": 8,
+        "recipeID": 3,
+        "email": "dang@gmail.com",
+        "name": "Dang",
+        "content": "I added bacon for an extra crunch! 🥰",
+      },
+      {
+        "id": 9,
+        "recipeID": 3,
+        "email": "minhquan31102003@gmail.com",
+        "name": "MinhQuan",
+        "content": "Very crumbly and dry. I doubled the butter, cream, and sour cream which much improved the flavor and texture.",
+      },
+      {
+        "id": 10,
+        "recipeID": 4,
+        "email": "quan@gmail.com",
+        "name": "Quan",
+        "content": "I added grape tomatoes to make it more colorful and yummy!",
+      },
+      {
+        "id": 11,
+        "recipeID": 4,
+        "email": "dang@gmail.com",
+        "name": "Dang",
+        "content": "I used about half the butter that the recipe called for and it was still delicious!",
+      },
+      {
+        "id": 12,
+        "recipeID": 4,
+        "email": "minhquan31102003@gmail.com",
+        "name": "MinhQuan",
+        "content": "Added heavy whipping cream to make it creamy and which helps cut down the spiciness, so yummy!",
+      },
+    ];
+    const accountsCol = collection(db, 'tips');
+  
+    for (const accout of tips) {
+      await addDoc(accountsCol, accout);
+    }
+  }
+
   async function addAccounts() {
     const accounts = [
       {

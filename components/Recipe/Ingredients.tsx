@@ -5,7 +5,7 @@ import {
   View,
 } from 'react-native';
 import {Image} from 'react-native-elements';
-import { getFirestore, collection, getDocs, query, where, documentId } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where, documentId, orderBy } from "firebase/firestore";
 import { db } from '../../firebase/firebase';
 import { useEffect, useState } from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -30,59 +30,81 @@ export default function Ingredients() {
   const route = useRoute<DetailRecipeRouteProp>();
   const { courseID } = route.params;
   console.log('CourseID của ingredient:', courseID);
+  const [coursesIngredients, setCoursesIngredients] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-  async function getIngredientsForCourse(courseID) {
+  const [maxID, setMaxID] = useState(null);
+  const [minID, setMinID] = useState(null);
+  async function getCoursesIngredients(courseID) {
     try {
       // Lấy dữ liệu từ bảng coursesIngredients
       const coursesIngredientsRef = collection(db, "coursesIngredients");
       const coursesIngredientsQuery = query(coursesIngredientsRef, where("recipeID", "==", courseID));
       const coursesIngredientsSnapshot = await getDocs(coursesIngredientsQuery);
-      const cities = coursesIngredientsSnapshot.docs.map((doc) => doc.data());
-      // Lấy dữ liệu từ bảng ingredients
-      const ingredientsRef = collection(db, "ingredients");
-      const ingredientsIds = coursesIngredientsSnapshot.docs.map((doc) => doc.data().ingredientID);
-      const ingredientsQuery = query(ingredientsRef, where("ingredientID", "==", ingredientsIds));
-      const ingredientsSnapshot = await getDocs(ingredientsQuery);
-      const cities1 = ingredientsSnapshot.docs.map((doc) => doc.data());
-      // Tạo một mảng chứa các thông tin về ingredients và quantity
-      const ingredients1: ((prevState: never[]) => never[]) | { name: any; type: any; quantity: any; }[] = [];
-      coursesIngredientsSnapshot.docs.forEach((doc) => {
-        const ingredientData = ingredientsSnapshot.docs.find((ingredientDoc) => ingredientDoc.id === doc.data().ingredientID)?.data();
-        if (ingredientData) {
-          ingredients1.push({
-            name: ingredientData.name,
-            type: ingredientData.type,
-            quantity: doc.data().quantity
-          });
-        }
-      });
-      console.log(cities);
-      
-      setIngredients(ingredients1);
-      console.log(ingredients);
-      console.log(cities1);
+      const cities = coursesIngredientsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      const sortedDocs = cities.sort((a, b) => a.id - b.id);
+      setCoursesIngredients(sortedDocs);
+  
+      // Set minID and maxID only after coursesIngredients has been populated
+      if (sortedDocs.length > 0) {
+        setMinID(sortedDocs[0].id);
+        setMaxID(sortedDocs[sortedDocs.length - 1].id);
+      }
     } catch (error) {
       console.error("Error getting ingredients for course:", error);
       return [];
     }
   }
+
+  async function getIngredientsWithinRange(minID, maxID) {
+    try {
+      const ingredientsRef = collection(db, "ingredients");
+      const ingredientsQuery = query(
+        ingredientsRef,
+        where("id", ">=", minID),
+        where("id", "<=", maxID),
+        orderBy("id", "asc")
+      );
+  
+      const ingredientsSnapshot = await getDocs(ingredientsQuery);
+      const ingredients = ingredientsSnapshot.docs.map((doc) => ({
+        id: doc.data().id,
+        name: doc.data().name,
+        price: doc.data().price,
+        type: doc.data().type,
+      }));
+      
+      setIngredients(ingredients)
+      console.log(ingredients)
+      // return ingredients;
+    } catch (error) {
+      console.error("Error getting ingredients:", error);
+      return [];
+    }
+  }
    
   useEffect(() => {
-    getIngredientsForCourse(courseID);
-  }, [courseID]);
+    getCoursesIngredients(courseID);
+  
+    if (minID !== null && maxID !== null) {
+      getIngredientsWithinRange(minID, maxID);
+    }
+  }, [courseID, minID, maxID]);
     return (
       <View style={{flex: 1}}>
         <Text style={[styles.textTitle, {paddingVertical: 20}]}>
           Ingredients
         </Text>
   
-        {ingredients1.map((ingredient, index) => (
+        {ingredients.map((ingredient, index) => (
           <View key={index}>
             <View style={styles.ingredients}>
               <Text style={styles.textContent}>{ingredient.name}</Text>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.textContent, {fontWeight: 'bold'}]}>
-                  {ingredient.quantity} {ingredient.type}
+                  1 {ingredient.type}
                 </Text>
                 <TouchableOpacity
                   style={{marginLeft: 10, marginTop: 2, height: 30, width: 30}}>
