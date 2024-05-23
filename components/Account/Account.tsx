@@ -154,6 +154,7 @@ export default function AccountStack() {
     getDoc(userRef).then((doc) => {
       if (doc.exists()) {
         setName(doc.data().name);
+        console.log(doc.data().name);
       }}).catch((error) => {
         console.log("Error getting document:", error);
       });

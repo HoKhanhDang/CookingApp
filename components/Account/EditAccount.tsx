@@ -57,10 +57,7 @@ export default function EditAccount({navigation}) {
             }
             const accRef = doc(FIREBASE_STORE, 'accounts', email);
             await setDoc(accRef, account);
-
-            //xóa email cũ
-            await deleteDoc(doc(FIREBASE_STORE, "accounts", oldEmail));
-            
+          
         } catch (error) {
             console.log(error);
             setIsUpdate(!isUpdate);
@@ -70,6 +67,9 @@ export default function EditAccount({navigation}) {
             setIsUpdate(!isUpdate);
             
             if (email !== oldEmail) {
+                //xóa email cũ
+                await deleteDoc(doc(FIREBASE_STORE, "accounts", oldEmail));
+
                 Alert.alert(
                     'Notice',
                     'Email has been changed, please log in again',
