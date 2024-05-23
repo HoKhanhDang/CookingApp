@@ -76,6 +76,7 @@ export default function Ingredients() {
   async function getCoursesIngredients(courseID) {
     try {
       const coursesIngredientsRef = collection(db, "ingredients");
+      const coursesIngredientsRef = collection(db, "ingredients");
       const coursesIngredientsQuery = query(coursesIngredientsRef, where("recipeID", "==", courseID));
       const coursesIngredientsSnapshot = await getDocs(coursesIngredientsQuery);
       const cities = coursesIngredientsSnapshot.docs.map((doc) => ({
@@ -134,7 +135,26 @@ export default function Ingredients() {
         </Text>
   
         {ingredients.map((ingredient, index) => (
-            <IngredientsDisplay index={index} ingredient={ingredient}/>
+          <View key={index}>
+            <View style={styles.ingredients}>
+              <Text style={styles.textContent}>{ingredient.name}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.textContent, {fontWeight: 'bold'}]}>
+                  {ingredient.quantity + '  ' + ingredient.type}
+                </Text>
+                <TouchableOpacity
+                  style={{marginLeft: 10, marginTop: 2, height: 30, width: 30}}>
+                  <Image
+                    style={{height: 20, width: 20}}
+                    source={{
+                      uri: 'https://png.pngtree.com/png-vector/20190419/ourmid/pngtree-vector-add-icon-png-image_956621.jpg',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.separator} />
+          </View>
         ))}
       </View>
     );
