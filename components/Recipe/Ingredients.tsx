@@ -25,7 +25,7 @@ export default function Ingredients() {
   const [minID, setMinID] = useState(null);
   async function getCoursesIngredients(courseID) {
     try {
-      const coursesIngredientsRef = collection(db, "coursesIngredients");
+      const coursesIngredientsRef = collection(db, "ingredients");
       const coursesIngredientsQuery = query(coursesIngredientsRef, where("recipeID", "==", courseID));
       const coursesIngredientsSnapshot = await getDocs(coursesIngredientsQuery);
       const cities = coursesIngredientsSnapshot.docs.map((doc) => ({
@@ -60,6 +60,7 @@ export default function Ingredients() {
         name: doc.data().name,
         price: doc.data().price,
         type: doc.data().type,
+        quantity: doc.data().quantity
       }));
       
       setIngredients(ingredients)
@@ -90,7 +91,7 @@ export default function Ingredients() {
               <Text style={styles.textContent}>{ingredient.name}</Text>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.textContent, {fontWeight: 'bold'}]}>
-                  1 {ingredient.type}
+                  {ingredient.quantity + '  ' + ingredient.type}
                 </Text>
                 <TouchableOpacity
                   style={{marginLeft: 10, marginTop: 2, height: 30, width: 30}}>

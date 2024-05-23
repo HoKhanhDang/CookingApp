@@ -5,13 +5,13 @@ import { getDatabase } from "firebase/database";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyARqq_7VP6CXy9B_XPMSLVhdO_ZgpzCkhw",
-    authDomain: "fb-cooking-app.firebaseapp.com",
-    projectId: "fb-cooking-app",
-    storageBucket: "fb-cooking-app.appspot.com",
-    messagingSenderId: "69778010630",
-    appId: "1:69778010630:web:d5b3fb455fa4543533c987",
-    measurementId: "G-E5FTXJJK6M"
+    apiKey: "AIzaSyBMLNQ-oL6oaE24QiLiRi0KX27cafmJB5E",
+  authDomain: "cookingappdatabase.firebaseapp.com",
+  projectId: "cookingappdatabase",
+  storageBucket: "cookingappdatabase.appspot.com",
+  messagingSenderId: "989772326015",
+  appId: "1:989772326015:web:17016a4fca3bdc7ad70b4a",
+  measurementId: "G-DMF49SE6RM"
 };
 
 const app = initializeApp(firebaseConfig);
