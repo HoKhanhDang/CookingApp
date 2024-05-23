@@ -34,8 +34,6 @@ export default function Main({navigation}) {
 
   const user = React.useContext(UserContextInsideScreen);
 
-  console.log("dang o route"+user?.email);
-
   return (
     <PaperProvider>
         <Stack.Navigator>
@@ -45,7 +43,7 @@ export default function Main({navigation}) {
             options={{
               navigation: navigation,
               headerStyle: {
-                backgroundColor: '#F87469',
+                backgroundColor: 'white',
               },
               headerTintColor: '#fff',
               headerTitleStyle: {
@@ -59,15 +57,14 @@ export default function Main({navigation}) {
                     anchor={
                       <TouchableOpacity onPress={()=>openMenu()}>
                           <Image
-                            style={[{height:25,width:25}]}
-                            source={require('../../assets/icons/menu.png')}
+                            style={[{height:45,width:45,borderRadius:50}]}
+                            source={{uri:user.avatar}}
                           />
                       </TouchableOpacity>
                     
                   }
                   >
                     <Menu.Item onPress={()=>FIREBASE_AUTH.signOut()} title="Sign out" />
-                    <Menu.Item title="Item 2" />
                   </Menu>
                 </View>
                 
@@ -79,7 +76,7 @@ export default function Main({navigation}) {
                 />
               ),
               headerTitle: () => (
-                <Text style={{ alignSelf: 'center', color: 'white' }}>Welcome Quân!</Text>
+                <Text style={{ alignSelf: 'center', color: '#FF724C',fontSize:18,fontWeight:'bold' }}>Welcome {user.name} !!!</Text>
               ),
               headerTitleAlign: 'center',
             }}
@@ -95,6 +92,7 @@ export default function Main({navigation}) {
               headerTitleStyle: {
                 fontWeight: 'bold',
               },
+              headerTitle: "Trending Recipes",
             }}
           />
           <Stack.Screen
@@ -115,6 +113,7 @@ export default function Main({navigation}) {
             name="search"
             component={searchScreen}
             options={{
+              headerTitle: 'Results',
               headerStyle: {
                 backgroundColor: '#F87469',
               },
@@ -122,6 +121,7 @@ export default function Main({navigation}) {
               headerTitleStyle: {
                 fontWeight: 'bold',
               },
+              
             }}
           />
           <Stack.Screen
@@ -135,6 +135,7 @@ export default function Main({navigation}) {
               headerTitleStyle: {
                 fontWeight: 'bold',
               },
+              headerTitle: null,
             }}
           />
           <Stack.Screen

@@ -68,34 +68,13 @@ export default function Preparation({navigation}) {
   }, [courseID]);
     return (
         <View style={{}}>
-            <Text style={[styles.textTitle, {paddingBottom: 20}]}>Preparation</Text>
-
-            <View style={[styles.timePrepare]}>
-                <View style={{flexDirection: 'column'}}>
-                    <Text style={[styles.textContent, {fontWeight: 'bold'}]}>
-                        Total Time
-                    </Text>
-                    <Text style={styles.textContent}>50 min</Text>
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                    <Text style={[styles.textContent, {fontWeight: 'bold'}]}>
-                        Prep Time
-                    </Text>
-                    <Text style={styles.textContent}>{prepTime}</Text>
-                </View>
-                <View style={{flexDirection: 'column'}}>
-                    <Text style={[styles.textContent, {fontWeight: 'bold'}]}>
-                        Cook Time
-                    </Text>
-                    <Text style={styles.textContent}>{cookTime}</Text>
-                </View>
-            </View>
+            <Text style={[styles.textTitle ]}>Preparation</Text>
 
             <View>
                 <Text
                     style={[
                         styles.textNomal,
-                        {alignSelf: 'center', paddingVertical: 20, fontSize: 20},
+                        {color: "#2A2C41",alignSelf: 'center', paddingVertical: 20, fontSize: 20},
                     ]}>
                     Step-by-step instructions
                 </Text>
@@ -134,7 +113,7 @@ const styles = StyleSheet.create({
     textTitle: {
       fontSize: 30,
       fontWeight: 'bold',
-      color: 'black',
+      color: '#FF724C',
     },
     textContent: {
       fontSize: 15,
@@ -142,7 +121,7 @@ const styles = StyleSheet.create({
     },
     textNomal: {
       fontSize: 15,
-      color: 'black',
+      color: '#F4F4F8',
     },
     timePrepare: {
       flexDirection: 'row',
@@ -151,7 +130,7 @@ const styles = StyleSheet.create({
     stepsInstruction: {
       flexDirection: 'row',
       paddingVertical: 10,
-      backgroundColor: '#768884',
+      backgroundColor: '#FF724C',
       marginVertical: 5,
       borderRadius: 10,
     },

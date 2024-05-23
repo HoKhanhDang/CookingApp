@@ -33,7 +33,7 @@ export default function TipsScreen({ navigation }) {
   }, [courseID]);
 
   return (
-    <View style={{ flex: 1, height: 300 }}>
+    <View style={{ flex: 1, height: 300 ,marginTop:20}}>
       <View
         style={{
           flexDirection: 'row',
@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#FF724C',
   },
 });

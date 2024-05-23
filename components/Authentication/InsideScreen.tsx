@@ -27,17 +27,17 @@ export default function InsideScreen() {
   
     const user = useContext(UserContext);
     console.log("dang o insideC"+ user?.email);
-    
+
     return (
       <UserProvider user={user}>
           <SafeAreaProvider>
             <Tab.Navigator
               initialRouteName="Main"
-              activeColor="#e91e63"
-              activeIndicatorStyle={{backgroundColor: 'tomato', height: 45}}
+              activeColor="#FF724C"
+              activeIndicatorStyle={{backgroundColor: '#FF724C', height: 50}}
               barStyle={{
-                backgroundColor: '#F87469',
-                height: 60,
+                backgroundColor: 'white',
+                height: 70,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>

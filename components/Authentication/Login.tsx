@@ -110,14 +110,14 @@ export default function Login ({navigation}) {
                 }
                     
                     <TouchableOpacity style={[styles.components,styles.loginbutton]} onPress={()=> login()}>
-                        <Text style={[styles.text,{color:'black'}]}>Sign in</Text>
+                        <Text style={[styles.text,{color:'#F4F4F8'}]}>Sign in</Text>
                     </TouchableOpacity>
 
 
                     <View style={[styles.components,{flexDirection:'row'}]}> 
                         <Text style={[styles.text]}>Have an account yet? , </Text>
                         <TouchableOpacity onPress={()=> navigation.navigate('Register')}>
-                            <Text style={[styles.text,{fontWeight:"bold",color:"grey"}]}>Sign up</Text>
+                            <Text style={[styles.text,{fontWeight:"bold",color:"#FF724C"}]}>Sign up</Text>
                         </TouchableOpacity>           
                     </View>
 
@@ -138,7 +138,7 @@ export default function Login ({navigation}) {
 const styles = StyleSheet.create({
     container:{
         color:"white",
-        backgroundColor:"black",
+        backgroundColor:"#F4F4F8",
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
@@ -148,11 +148,11 @@ const styles = StyleSheet.create({
     textInput:{
         marginTop:10,
         height: 40, 
-        borderColor: 'gray', 
+        borderColor: '#2A2C41', 
         borderWidth: 1 , 
         borderRadius:15,
         paddingHorizontal:20,
-        color:"white",
+        color:"#2A2C41",
 
     },
     loginbutton:{
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         borderRadius:30,
         width:"70%",
         height:40,
-        backgroundColor:"white",
+        backgroundColor:"#FF724C",
     },
     components:{
         width: '70%',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         margin:10,
     },
     text:{
-        color:"white",
+        color:"#2A2C41",
         fontSize:18,
     },
 

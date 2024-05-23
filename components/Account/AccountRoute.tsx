@@ -15,20 +15,6 @@ export default class AccountStack extends Component{
           component={Account}     
         />
         <Stack.Screen
-          name="account_savedRecipes"
-          component={account_savedRecipes}
-          options={{
-          headerShown: false,
-          headerStyle: {
-            backgroundColor: '#F87469',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          }}
-        />
-        <Stack.Screen
           name="showRecipeScreen"
           component={showRecipeScreen}
           options={{

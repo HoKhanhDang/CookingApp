@@ -76,19 +76,18 @@ export default function DetailRecipe() {
             <Text style={{fontWeight: 'bold'}}>{like}</Text> would like this
           </Text>
         </View>
+
         <View style={styles.navDetail}>
           <Image
             style={[{width: 30, height: 30}]}
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/6611/6611465.png',
-            }}
+            source={require('../../assets/icons/time.png')}
           />
           <Text style={[styles.textContent, {marginLeft: 10}]}>
             Ready in<Text style={{fontWeight: 'bold'}}> {prepTime}</Text>
           </Text>
         </View>
         <Image
-          style={[{width: windowWidth, height: windowWidth}]}
+          style={[{width: windowWidth, height: windowWidth,marginTop: 15}]}
           source={{
             uri: img,
           }}
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     textTitle: {
         fontSize: 30,
         fontWeight: 'bold',
-        color: 'black',
+        color: '#FF724C',
     },
     textContent: {
         fontSize: 15,
@@ -115,6 +114,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        marginVertical: 5,
     },
 });
 

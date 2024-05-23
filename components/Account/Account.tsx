@@ -166,8 +166,8 @@ function tab2() {
 const renderTabBar = props => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: 'pink' }}
-    style={{ backgroundColor: 'black' }}
+    indicatorStyle={{ backgroundColor: '#F4F4F8' }}
+    style={{ backgroundColor: '#FF724C' }}
   />
 );
 
@@ -231,7 +231,7 @@ function Account({navigation}){
               renderScene={renderScene}
               onIndexChange={setIndex}
               initialLayout={{ width: Dimensions.get('window').width  }}
-              style={{backgroundColor: 'white',width: '100%', height: '100%'}}
+              style={{backgroundColor: '#F4F4F8',width: '100%', height: '100%'}}
             />
         </View>
       </View>
@@ -262,7 +262,16 @@ export default function AccountStack() {
     <UserProvider user={name}>
       <stack.Navigator>
         <stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
-        <stack.Screen name="EditAccount" component={EditAccount} />
+        <stack.Screen name="EditAccount" component={EditAccount}
+          options={{
+      
+        
+            headerStyle: {
+              backgroundColor: '#FF724C',
+            },
+
+          }} 
+        />
         <stack.Screen
             name="detail"
             component={showRecipeScreen}
@@ -270,7 +279,7 @@ export default function AccountStack() {
     
               headerShown: false,
               headerStyle: {
-                backgroundColor: '#F87469',
+                backgroundColor: '#FF724C',
               },
               headerTintColor: '#fff',
               headerTitleStyle: {
@@ -291,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '8%',
-    backgroundColor: '#fa9e51'
+    backgroundColor: '#F4F4F8'
   },
   icon:{
     width: 40,
@@ -301,26 +310,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     borderRadius: 45,
-    backgroundColor: 'white',
+    backgroundColor: '#F4F4F8',
   },
   conMain:{
     flexDirection: 'column',
     flex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#FF724C',
 
   },
   conTop:{
     height:'40%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderTopColor: 'black',
-    borderStartWidth: 1,
-    borderEndWidth: 1,
-    borderTopStartRadius: 100,
-    borderTopEndRadius: 100,
-    backgroundColor: 'black',
+    backgroundColor: '#FF724C',
   },
   conOfLike:{
     flexDirection: 'row',
@@ -333,8 +337,9 @@ const styles = StyleSheet.create({
     height: '60%',
     width: '100%',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderTopColor: 'black',
+    backgroundColor: '#F4F4F8',
+    borderTopColor: 'white',
+
     borderStartWidth: 1,
     borderEndWidth: 1,
     borderEndStartRadius: 100,
@@ -361,21 +366,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },  
   textName:{
-    color: 'black',
+    color: '#2A2C41',
     fontSize: 28,
     fontWeight: '600',
     marginVertical: 10,
   },
   text:{
-    color: 'white',
+    color: '#F4F4F8',
   },
   textNomo:{
-    color: 'black',
+    color: '#2A2C41',
     fontSize: 20,
     fontWeight: '600',
   },
   textRecipe:{
-    color: 'white',
+    color: '#2A2C41',
     fontSize: 18,
     alignSelf: 'flex-start',
   },
@@ -385,13 +390,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '8%',
-    backgroundColor: '#fa9e51'
+    backgroundColor: '#FF724C'
   },
   scrollRecipes:{
     flex:1,
     width: '100%',
     padding: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#F4F4F8',
   },
   wrap:{
     flexDirection: 'row',

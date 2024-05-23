@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import {
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -19,43 +20,7 @@ import { UserContextInsideScreen } from '../Authentication/InsideScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import firebase from 'firebase/compat/app';
 
-const RecipesList = [
-  {
-    "id": 1,
-    "name": "Spaghetti Carbonara",
-    "category": "Italian",
-    "detailContent": "A classic Italian pasta dish made with eggs, cheese, bacon, and pepper.",
-    "like": 100,
-    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/1.jpg?alt=media&token=8bf357c6-b1ba-4c4c-b7cf-431c67492895"},
-  {
-    "id": 2,
-    "name": "Chicken Curry",
-    "category": "Indian",
-    "detailContent": "A flavorful Indian dish made with chicken, curry spices, and coconut milk.",
-    "like": 150,
-    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/2.jpg?alt=media&token=ff822dc4-4839-4205-9926-0281a4253678"},
-  {
-    "id": 3,
-    "name": "Taco Salad",
-    "category": "Mexican",
-    "detailContent": "A fresh and crunchy salad featuring taco-seasoned ground beef, lettuce, tomatoes, cheese, and tortilla chips.",
-    "like": 80,
-    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/3.jpg?alt=media&token=224fa62b-efba-48cb-b4eb-78c623da19e8"},
-  {
-    "id": 4,
-    "name": "Sushi Rolls",
-    "category": "Japanese",
-    "detailContent": "Delicious sushi rolls filled with rice, seafood, vegetables, and nori.",
-    "like": 120,
-    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/4.jpg?alt=media&token=dca68982-870d-4f95-9131-23492b34151e" },
-  {
-    "id": 5,
-    "name": "Chocolate Cake",
-    "category": "Dessert",
-    "detailContent": "Decadent chocolate cake made with rich cocoa powder, butter, sugar, and eggs.",
-    "like": 200,
-    "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/5.jpg?alt=media&token=2b4896c7-f030-41ef-9c28-626fa79b91a5"}
-];
+const windowWidth = Dimensions.get('window').width;
 
 export const UserContextHome1 = createContext(null);
 const UserProvider = ({ children, user }) => {
@@ -67,7 +32,12 @@ export default function MainScreen({navigation}) {
   const user = useContext(UserContextInsideScreen);
   const [searchTerm, setSearchTerm] = useState('');
   const [cities, setCities] = useState([]);
+
+  const [recentlyCoursesID, setRecentlyCoursesID] = useState([]); // Lưu 4 giá trị đầu của recentlyCoursesID
+
   const [courseRecently, setCourseRecently] = useState([]);
+
+
   async function getCourses() {
     try {
       const citiesCol = collection(db, "courses");
@@ -78,46 +48,60 @@ export default function MainScreen({navigation}) {
       console.error("Error getting cities", e);
     }
   }
+
+
   async function getCoursesByID(courseID) {
     try {
       const coursesRef = collection(db, "courses");
       const q = query(coursesRef, where("id", "==", courseID));
-      const querySnapshot = await getDocs(q);
-      const courseList = querySnapshot.docs.map((doc) => doc.data());
   
-      setCourseRecently(courseList);
+      const snapshot = await getDocs(q);
+      const list = snapshot.docs.map((doc) => doc.data());
+
+      return list; 
+  
     } catch (e) {
       console.error("Error getting courses:", e);
     }
   }
+
   async function fetchCoursesByID() {
     try {
-      const courseIDs = recentlyCoursesID.map(item => item.courseID); // Lấy 4 giá trị đầu của recentlyCoursesID
+      const courseIDs = recentlyCoursesID.map(item => item.courseID); 
+      let courseList = []; 
       for (const courseID of courseIDs) {
-        await getCoursesByID(courseID);
+        const course = await getCoursesByID(courseID);
+        courseList.push(...course); 
       }
+      setCourseRecently(courseList); 
     } catch (e) {
       console.error("Error getting courses:", e);
     }
   }
+
   async function getRecentlyCourses(emailUser) {
     try {
       // Lấy danh sách các khóa học gần đây của user
       const citiesRef = collection(db, "recentlyCourses");
       const q = query(citiesRef, where('email', '==', emailUser));
+
       const querySnapshot = await getDocs(q);
       const cities = querySnapshot.docs.map((doc) => doc.data());
-      setRecentlyCoursesID(cities);
-      console.log('test1 : ', cities)
-      Array.from({ length: 4 }).map((_, index) => (
-        getCoursesByID(cities[index].courseID)
-      ))
+
       
+      setRecentlyCoursesID(cities);
+   
     } catch (error) {
       console.error('Error getting recently viewed courses:', error);
       throw error;
     }
   }
+
+  useEffect(() => {
+      fetchCoursesByID();
+  }, [recentlyCoursesID]);
+
+
   async function searchCoursesByName(searchTerm) {
     try {
       const db = getFirestore();
@@ -148,111 +132,97 @@ export default function MainScreen({navigation}) {
   return (
     <UserProvider user={user}>
       <SafeAreaProvider>
-    <View style={[styles.conMain]}>
-      <ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginVertical: 10,
-          }}>
-          <View style={styles.searchBar}>
-            <TextInput
-              underlineColor="transparent"
-              activeUnderlineColor="transparent"
-              placeholder="Search for anything"
+        <View style={[styles.conMain]}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View
               style={{
-                alignSelf: 'center',
-                backgroundColor: '#F0F0F0',
-                height: 40,
-                width: '100%',
-              }}
-              onChangeText={setSearchTerm}
-                value={searchTerm}
-            />
-          </View>
-          <TouchableOpacity onPress={handleSearch}>
-            <Image
-              style={{height: 40, width: 40, margin: 10}}
-              source={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/622/622669.png',
-              }}
-            />
-          </TouchableOpacity>
-        </View>
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginVertical: 10,
+              }}>
+              <View style={styles.searchBar}>
+                <TextInput
+                  underlineColor="#FF724C"
+                  activeUnderlineColor="transparent"
+                  placeholder="Search for anything"
+                  style={{
+                    alignSelf: 'center',
+                    backgroundColor: '#F4F4F8',
+                    height: 40,
+                    width: '100%',                  
+                  }}
+                  
+                  onChangeText={setSearchTerm}
+                    value={searchTerm}
+                />
+              </View>
+              <TouchableOpacity onPress={handleSearch}>
+                <Image
+                  style={{height: 40, width: 40, marginLeft: 15}}
+                  source={require('../../assets/icons/search.png')}
+                />
+              </TouchableOpacity>
+            </View>
 
-        <View style={[styles.conEachRow]}>
-          <View style={[styles.conTitle]}>
-            <Text style={[styles.textTitle]}>Trending</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('seemore')}>
-              <Text>See more</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={{width:windowWidth-25,height:250,backgroundColor:'black',borderRadius:20,marginVertical:15}}>
+                <Image style={{width:"100%",height:250,borderRadius:20}} source={require('../../assets/icons/thumb1.jpg')}/>
+                <Text style={{position:'absolute',top:100,right:70,fontSize:25,color:'white',fontWeight:'bold'}}>Enjoy your cooking </Text>
+            </View>
 
-          <ScrollView
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            contentContainerStyle={[styles.scroll]}>
-            {cities.map((citie, index) => (
-              <Recipes
-                key={citie.id}
-                recipeName={citie.name}
-                recipeImage={citie.img}
-                navigation={navigation}
-                id={citie.id}
-              />
-            ))}
+            <View style={[styles.conEachRow]}>
+              <View style={[styles.conTitle]}>
+                <Text style={[styles.textTitle]}>Trending</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('seemore')}>
+                  <Text>See more</Text>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                contentContainerStyle={[styles.scroll]}>
+                {cities.map((citie, index) => (
+                  <Recipes
+                    key={citie.id}
+                    recipeName={citie.name}
+                    recipeImage={citie.img}
+                    navigation={navigation}
+                    id={citie.id}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+
+            <View style={{width:windowWidth-25,height:250,backgroundColor:'black',borderRadius:20,marginVertical:20}}>
+                <Image style={{width:"100%",height:250,borderRadius:20}} source={require('../../assets/icons/thumb2.jpg')}/>
+                <Text style={{position:'absolute',bottom:20,right:60,fontSize:25,color:'white',fontWeight:'bold'}}>Practice make PERFECT</Text>
+            </View>
+
+            <View style={[styles.conEachRow]}>
+              <View style={[styles.conTitle]}>
+                <Text style={[styles.textTitle]}>Recently</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('seemore')}>
+                  <Text>See more</Text>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={[styles.scroll]}>
+                {courseRecently.map((courseRecent, index) => (
+                  <Recipes
+                    key={index}
+                    recipeName={courseRecent.name}
+                    recipeImage={courseRecent.img}
+                    navigation={navigation}
+                    id={courseRecent.id}
+                  />
+                ))}
+              </ScrollView>
+            </View>
           </ScrollView>
         </View>
-
-        <View style={[styles.conEachRow]}>
-          <View style={[styles.conTitle]}>
-            <Text style={[styles.textTitle]}>Recently</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('seemore')}>
-              <Text>See more</Text>
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[styles.scroll]}>
-            {courseRecently.map((courseRecent, index) => (
-              <Recipes
-                key={index}
-                recipeName={courseRecent.name}
-                recipeImage={courseRecent.img}
-                navigation={navigation}
-                id={courseRecent.id}
-              />
-            ))}
-          </ScrollView>
-        </View>
-
-        <View style={[styles.conEachRow]}>
-          <View style={[styles.conTitle]}>
-            <Text style={[styles.textTitle]}>Category</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('seemore')}>
-              <Text>See more</Text>
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[styles.scroll]}>
-            {RecipesList.map((recipe, index) => (
-              <Recipes
-                key={index}
-                recipeName={recipe.name}
-                recipeImage={recipe.img}
-                navigation={navigation}
-              />
-            ))}
-          </ScrollView>
-        </View>
-      </ScrollView>
-    </View>
     </SafeAreaProvider>
     </UserProvider>
   );
@@ -266,15 +236,15 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#FF724C',
   },
   textContent: {
     fontSize: 15,
-    color: 'black',
+    color: '#2A2C41',
   },
   textNomal: {
     fontSize: 15,
-    color: 'black',
+    color: '#2A2C41',
   },
   //search bar
   searchBar: {
@@ -303,11 +273,12 @@ const styles = StyleSheet.create({
   },
   search: {
     fontSize: 18,
-    color: 'black',
+    color: '#2A2C41',
     borderRadius: 45,
-    backgroundColor: 'white',
+    backgroundColor: '#FF724C',
   },
   conMain: {
+    backgroundColor: '#F4F4F8',
     padding:10
   },
   conEachRow: {
@@ -323,7 +294,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginLeft: 10,
-    color: 'black',
+    color: '#FF724C',
     fontSize: 22,
     fontWeight: '600',
   },
@@ -338,7 +309,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '8%',
-    backgroundColor: '#fa9e51',
+    backgroundColor: '#FF724C',
   },
 
   // Recipe

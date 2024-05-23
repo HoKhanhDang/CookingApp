@@ -21,7 +21,7 @@ const Tips = ({id, name, content}) => {
           style={styles.profileImage}
           source={require('../../assets/icons/profile.png')}
         />
-        <Text>{name}</Text>
+        <Text style={{color:"#F4F4F8"}}>{name}</Text>
       </View>
       <View style={{ flex: 5 }}>
         <Text style={[styles.textContent, { padding: 20 }]}>
@@ -37,18 +37,18 @@ const styles = StyleSheet.create({
   tips: {
     flexDirection: 'row',
     marginVertical: 10,
-    backgroundColor: '#FBB2AC',
+    backgroundColor: '#FF724C',
     padding: 10,
     borderRadius: 20,
   },
   profileImage: {
-    width: 100,
-    height: 100,
+    width: 70,
+    height: 70,
     borderRadius: 25,
   },
   textContent: {
     fontSize: 15,
-    color: 'black',
+    color: '#F4F4F8',
   },
 });
 

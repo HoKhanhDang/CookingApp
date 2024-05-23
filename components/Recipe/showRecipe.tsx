@@ -93,26 +93,9 @@ export default function ShowRecipe({ navigation }) {
     try {
       const docRef = doc(FIREBASE_STORE, "savedRecipes", user.email+courseID);
       await deleteDoc(docRef);
-      console.log('Disliked');
     } catch (error) {
       console.error('Error disliking', error);
     }
-
-    // try {
-    //   const q = query(
-    //     collection(FIREBASE_STORE, "savedRecipes"),
-    //     where("courseID", "==", courseID)
-    //   );
-  
-    //   const querySnapshot = await getDocs(q);
-    //   querySnapshot.forEach((doc) => {
-    //     deleteDoc(doc.ref);
-    //   });
-  
-    //   console.log('Disliked');
-    // } catch (error) {
-    //   console.error('Error disliking', error);
-    // }
   }
 
 
@@ -142,7 +125,7 @@ export default function ShowRecipe({ navigation }) {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1,backgroundColor:"#F4F4F8"}}>
       <View style={styles.navTop}>
           <TouchableOpacity onPress={()=> navigation.goBack()}>
             <Image style={[styles.icon]} source={require('../../assets/icons/back.png')}/>
@@ -167,7 +150,6 @@ export default function ShowRecipe({ navigation }) {
           <DetailRecipe />
           <Ingredients />
           <Preparation navigation={navigation} />
-          <RelateRecipes />
           <TipsScreen navigation={navigation} />
         </View>
         <View style={styles.doneRecipe}>
@@ -208,10 +190,10 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   }, 
   navTop:{
-    paddingHorizontal:10,
-    height: 50,
+    paddingHorizontal:15,
+    height: 60,
     width: '100%',
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     flexDirection: 'row',
     alignItems:'center',
     justifyContent:'space-between',
@@ -227,12 +209,11 @@ const styles = StyleSheet.create({
     width: 100,
   },
   doneRecipe:{
-    
     width: '100%',
     height: 100,
     alignItems: 'center',
     justifyContent: 'space-around',
-
+    borderRadius: 20,
     marginBottom:50
   },
   done:{
@@ -241,7 +222,7 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: "space-evenly",
     alignItems: 'center',
-
+    borderRadius: 50,
     backgroundColor:'#44B678',
   },
   notDone:{
@@ -250,7 +231,7 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: "space-evenly",
     alignItems: 'center',
-
+    borderRadius: 50,
     backgroundColor:'grey',
   },
 

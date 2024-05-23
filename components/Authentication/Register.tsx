@@ -137,14 +137,14 @@ export default function Register ({navigation}) {
 
                     <View style={styles.components}>
                         <TouchableOpacity style={[styles.loginbutton]} onPress={()=>register()}>
-                            <Text style={[styles.text,{color:'black'}]}>Create Account</Text>
+                            <Text style={[styles.text,{color:'#F4F4F8'}]}>Create Account</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style={[styles.components,{flexDirection:'row'}]}> 
                         <Text style={[styles.navText]}>Already have an account ? , </Text>
                         <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
-                            <Text style={[styles.navText,{fontWeight:"bold",color:"grey"}]}>Sign in</Text>
+                            <Text style={[styles.navText,{fontWeight:"bold",color:"#FF724C"}]}>Sign in</Text>
                         </TouchableOpacity>           
                     </View>
             </>
@@ -157,7 +157,7 @@ export default function Register ({navigation}) {
 const styles = StyleSheet.create({
     container:{
         color:"white",
-        backgroundColor:"black",
+        backgroundColor:"#F4F4F8",
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     },
     title:{
         fontSize:40,
-        color:"white",
+        color:"#FF724C",
         fontWeight:"bold",
         alignSelf:"center",
     },
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         borderWidth: 1 , 
         borderRadius:30,
         paddingHorizontal: 20,
-        color:"white",
+        color:"#2A2C41",
         
     },
     loginbutton:{
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
         borderRadius:30,
         width:"100%",
         height:40,
-        backgroundColor:"white",
+        backgroundColor:"#FF724C",
     },
     components:{
         width: '70%',
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         margin:10,
     },
     text:{
-        color:"white",
+        color:"#2A2C41",
         fontSize:18,
     },
 
