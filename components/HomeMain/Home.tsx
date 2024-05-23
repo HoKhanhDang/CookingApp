@@ -63,12 +63,11 @@ const UserProvider = ({ children, user }) => {
 };
 
 export default function MainScreen({navigation}) {
+  const user1 = useContext(UserContext);
   const user = useContext(UserContextInsideScreen);
   const [searchTerm, setSearchTerm] = useState('');
   const [cities, setCities] = useState([]);
-  const [recentlyCoursesID, setRecentlyCoursesID] = useState([]);
   const [courseRecently, setCourseRecently] = useState([]);
-  const [courseSearch, setCourseSearch] = useState([]);
   async function getCourses() {
     try {
       const citiesCol = collection(db, "courses");
@@ -93,17 +92,6 @@ export default function MainScreen({navigation}) {
       console.error("Error getting courses:", e);
     }
   }
-  async function fetchCoursesByID() {
-    try {
-      const courseIDs = recentlyCoursesID.map(item => item.courseID); // Lấy 4 giá trị đầu của recentlyCoursesID
-      console.log('4 courid ', courseIDs)
-      for (const courseID of courseIDs) {
-        await getCoursesByID(courseID);
-      }
-    } catch (e) {
-      console.error("Error getting courses:", e);
-    }
-  }
   async function getRecentlyCourses(emailUser) {
     try {
       // Lấy danh sách các khóa học gần đây của user
@@ -112,7 +100,9 @@ export default function MainScreen({navigation}) {
       const querySnapshot = await getDocs(q);
       const cities = querySnapshot.docs.map((doc) => doc.data());
       console.log('test1 : ', cities)
-      setRecentlyCoursesID(cities);
+      Array.from({ length: 4 }).map((_, index) => (
+        getCoursesByID(cities[index].courseID)
+      ))
       
     } catch (error) {
       console.error('Error getting recently viewed courses:', error);
@@ -126,11 +116,7 @@ export default function MainScreen({navigation}) {
       const q = query(coursesRef, where("name", ">=", searchTerm), where("name", "<=", `${searchTerm}\uf8ff`));
       const querySnapshot = await getDocs(q);
       const courseList = querySnapshot.docs.map((doc) => doc.data());
-      setCourseSearch(courseList);
-      console.log('courseSearch1: ', searchTerm);
-      console.log('courseSearch2: ', courseList);
       navigation.navigate('search', {courseList: courseList})
-      console.log('courseSearch3: ', courseSearch);
       return courseList;
     } catch (e) {
       console.error("Error getting courses:", e);
@@ -143,12 +129,8 @@ export default function MainScreen({navigation}) {
   };
   useEffect(() => {
     getCourses();
-    getRecentlyCourses(user.email);
-    fetchCoursesByID();
-    console.log('user in home', user.email);
-    console.log('recentlyCourses: ', recentlyCoursesID);
+    getRecentlyCourses(user1.email);
     console.log('courseRecently: ', courseRecently);
-    console.log('courseSearch4: ', courseSearch);
   }, []);
 
   
@@ -226,7 +208,7 @@ export default function MainScreen({navigation}) {
             contentContainerStyle={[styles.scroll]}>
             {courseRecently.map((courseRecent, index) => (
               <Recipes
-                key={courseRecent.id}
+                key={index}
                 recipeName={courseRecent.name}
                 recipeImage={courseRecent.img}
                 navigation={navigation}

@@ -60,8 +60,6 @@ const SearchScreen = ({navigation}) => {
   const [searchText, setSearchText] = useState('');
   const [courseSearch, setCourseSearch] = useState([]);
 
-  console.log('courseList:', courseList);
-
   async function searchCoursesByName(searchTerm) {
     try {
       const db = getFirestore();

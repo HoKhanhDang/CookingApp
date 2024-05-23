@@ -15,34 +15,6 @@ type RootStackParamList = {
 };
 type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'detail'>;
 
-const steps = [
-  {stepNumber: 1, detail: 'Preheat the oven to 350°F.'},
-  {
-    stepNumber: 2,
-    detail:
-      'In a large mixing bowl, combine the flour, sugar, and baking powder.',
-  },
-  {
-    stepNumber: 3,
-    detail:
-      'In a separate bowl, whisk together the eggs, milk, and melted butter.',
-  },
-  {
-    stepNumber: 4,
-    detail:
-      'Gradually add the wet ingredients to the dry ingredients, stirring until just combined.',
-  },
-  {
-    stepNumber: 5,
-    detail: 'Pour the batter into a greased baking dish and smooth the top.',
-  },
-  {
-    stepNumber: 6,
-    detail:
-      'Bake for 25-30 minutes or until a toothpick inserted into the center comes out clean.',
-  },
-  {stepNumber: 7, detail: 'Allow the cake to cool before serving.'},
-];
 
 export default function Preparation({navigation}) {
   const [instructions, setInstructions] = useState([]);
@@ -78,19 +50,15 @@ export default function Preparation({navigation}) {
     try {
       const citiesRef = collection(db, "instructions");
   
-      // Lọc theo courseID
       const courseIdQuery = query(citiesRef, where("courseID", "==", courseID));
       const courseIdSnapshot = await getDocs(courseIdQuery);
       const courseIdDocs = courseIdSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-  
-      // Sắp xếp theo step
       const sortedDocs = courseIdDocs.sort((a, b) => a.step - b.step);
   
       setInstructions(sortedDocs);
-      console.log(sortedDocs);
     } catch (e) {
       console.error("Error getting instructions", e);
     }

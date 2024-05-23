@@ -29,16 +29,13 @@ const MainComments = () => {
   const user = useContext(UserContextHome1);
   const route = useRoute<DetailRecipeRouteProp>();
     const { courseID } = route.params;
-    console.log('courseID in seemoretip:', courseID);
     const [tips, setTips] = useState([]);
     async function getTips(courseID) {
       const citiesRef = collection(db, "tips");
       const q = query(citiesRef, where("recipeID", "==", courseID));
       const querySnapshot = await getDocs(q);
-  
       const cities = querySnapshot.docs.map((doc) => doc.data());
       setTips(cities);
-      console.log(cities);
     }
     async function addTip(recipeID, email, name, content) {
       try {
@@ -54,13 +51,7 @@ const MainComments = () => {
     
         if (!querySnapshot.empty) {
           const maxTip = querySnapshot.docs[0];
-          const maxId = maxTip.data().id;
-          console.log('maxID', maxId);
-          console.log(recipeID);
-          console.log(email);
-          console.log(name);
-          console.log(content);
-    
+          const maxId = maxTip.data().id;   
           const newTip = {
             id: maxId + 1, // Tăng ID lên 1 so với ID lớn nhất
             recipeID: recipeID,
@@ -82,10 +73,7 @@ const MainComments = () => {
   };
   
     useEffect(() => {
-      getTips(courseID);
-      console.log('user1 in seemoretip: ', user1)
-      console.log('user in seemoretip: ', user)
-      
+      getTips(courseID);      
     }, [courseID]);
   return (
     <View style={{ flex: 1, flexDirection: 'column', padding: 10 }}>

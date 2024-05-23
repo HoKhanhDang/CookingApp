@@ -43,7 +43,7 @@ export default function Recipes({ recipeName, recipeImage, navigation, id}) {
     navigation.navigate('detail', { courseID: id });
   };
   useEffect(() => {
-    console.log('user in recipe: ', user)
+
   }, []);
   return (
     <TouchableOpacity
