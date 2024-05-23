@@ -76,7 +76,6 @@ export default function Ingredients() {
   async function getCoursesIngredients(courseID) {
     try {
       const coursesIngredientsRef = collection(db, "ingredients");
-      const coursesIngredientsRef = collection(db, "ingredients");
       const coursesIngredientsQuery = query(coursesIngredientsRef, where("recipeID", "==", courseID));
       const coursesIngredientsSnapshot = await getDocs(coursesIngredientsQuery);
       const cities = coursesIngredientsSnapshot.docs.map((doc) => ({
