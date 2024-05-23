@@ -13,51 +13,148 @@ import { useNavigation } from '@react-navigation/native';
 
 import { UserContextInsideScreen } from '../Authentication/InsideScreen';
 import { FIREBASE_STORE } from '../../firebase/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { DocumentData, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { set } from 'firebase/database';
 import Login from '../Authentication/Login';
 
 const stack = createNativeStackNavigator();
 
-function ShowRecipe() {
+
+function ShowRecipe({name,img,id}) {
+  const navigation = useNavigation();
   return (
-    <View style={styles.showRecipe}>
+    <TouchableOpacity style={styles.showRecipe} onPress={()=>navigation.navigate("detail", { courseID: id })}>
         <View style={{height:'70%',alignItems:'center'}}>
             <Image 
               style={{height: 170, width: 170,borderRadius: 5}}
-              source={require('../../assets/icons/ga.png')}
+              source={{uri: img}}
             />
         </View>
         <View style={{height:'30%',padding:5}}>
-            <Text style={styles.textRecipe}>Recipe sadasd Nasadasdsameasdsadsad</Text>
+            <Text style={styles.textRecipe}>{name}</Text>
         </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
 function tab1({navigation}) {
+  const [coursesID, setCoursesID] = useState<DocumentData>([]);
+  const [coursesDisplay, setCoursesDisplay] = useState<DocumentData>([]);
+
+  const userContext = useContext(UserContextInsideScreen);
+
+  async function getCoursesSavedIDs() {
+    try {
+      const q = query(
+        collection(FIREBASE_STORE, "savedRecipes"),
+        where("email", "==", userContext.email)
+      );
+  
+      const snapshot = await getDocs(q);
+      const list = snapshot.docs.map((doc) => doc.data());
+  
+      setCoursesID(list);
+    } catch (e) {
+      console.error("Error getting courses", e);
+    }
+  }
+  async function getCoursesDisplay() {
+    const list: DocumentData = [];
+    for (let i = 0; i < coursesID.length; i++) {
+      console.log(coursesID[i].courseID);
+      const q = query(
+        collection(FIREBASE_STORE, "courses"),
+        where("id", "==",  coursesID[i].courseID)
+      );
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        list.push(doc.data());
+      });
+    }
+    console.log(list);
+    setCoursesDisplay(list);  
+  }
+
+  useEffect(() => {
+    getCoursesSavedIDs();
+  }, []); 
+
+  useEffect(() => {
+    console.log(coursesID.length);
+    if (coursesID.length > 0) {
+      getCoursesDisplay();
+    }
+  }, [coursesID]); 
+
   return (
           <>     
               <ScrollView style={styles.scrollRecipes}>               
                   <View style={styles.wrap}>
-                      <ShowRecipe />    
-                      <ShowRecipe />
-                      <ShowRecipe />                            
-                  </View>
-                    
-                  
+                      {coursesDisplay.map((course) => {
+                        return <ShowRecipe name={course.name} img={course.img} id={course.id} />;
+                      } )}                      
+                  </View>                                 
               </ScrollView>
           </>         
   );
 }
 function tab2() { 
+  const [coursesID, setCoursesID] = useState<DocumentData>([]);
+  const [coursesDisplay, setCoursesDisplay] = useState<DocumentData>([]);
+
+  const userContext = useContext(UserContextInsideScreen);
+
+  async function getCoursesSavedIDs() {
+    try {
+      const q = query(
+        collection(FIREBASE_STORE, "doneRecipes"),
+        where("email", "==", userContext.email)
+      );
+  
+      const snapshot = await getDocs(q);
+      const list = snapshot.docs.map((doc) => doc.data());
+  
+      setCoursesID(list);
+    } catch (e) {
+      console.error("Error getting courses", e);
+    }
+  }
+  async function getCoursesDisplay() {
+    const list: DocumentData = [];
+    for (let i = 0; i < coursesID.length; i++) {
+      console.log(coursesID[i].courseID);
+      const q = query(
+        collection(FIREBASE_STORE, "courses"),
+        where("id", "==",  coursesID[i].courseID)
+      );
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        list.push(doc.data());
+      });
+    }
+    console.log(list);
+    setCoursesDisplay(list);  
+  }
+
+  useEffect(() => {
+    getCoursesSavedIDs();
+  }, []); 
+
+  useEffect(() => {
+    console.log(coursesID.length);
+    if (coursesID.length > 0) {
+      getCoursesDisplay();
+    }
+  }, [coursesID]); 
   return (
           <>     
               <ScrollView style={styles.scrollRecipes}>               
                   <View style={styles.wrap}>
-                      <ShowRecipe />    
-                      <ShowRecipe />
-                      <ShowRecipe />                            
+                      {coursesDisplay.map((course) => {
+                        return <ShowRecipe name={course.name} img={course.img} id={course.id} />;
+                      })}                             
                   </View>
                                  
               </ScrollView>
@@ -83,13 +180,14 @@ function Account({navigation}){
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'first', title: 'Saved' },
-    { key: 'second', title: 'Liked' },
+    { key: 'second', title: 'Completed' },
   ]);
 
   const [account, setAccount] = useState({});
 
   const navigationn = useNavigation();
   const userContext = useContext(UserContextInsideScreen);
+  
 
   useEffect(() => {
     const userRef = doc(FIREBASE_STORE, "accounts", userContext.email);
@@ -100,7 +198,7 @@ function Account({navigation}){
         console.log("Error getting document:", error);
       });
   }
- );
+  ),[]; 
  
   return (
       
@@ -165,6 +263,21 @@ export default function AccountStack() {
       <stack.Navigator>
         <stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
         <stack.Screen name="EditAccount" component={EditAccount} />
+        <stack.Screen
+            name="detail"
+            component={showRecipeScreen}
+            options={{
+    
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: '#F87469',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
       </stack.Navigator>
     </UserProvider>
       

@@ -26,6 +26,7 @@ const Tab = createMaterialBottomTabNavigator();
 export default function InsideScreen() {
   
     const user = useContext(UserContext);
+    console.log("dang o insideC"+ user?.email);
     
     return (
       <UserProvider user={user}>

@@ -22,6 +22,8 @@ const Stack = createNativeStackNavigator();
 import {FIREBASE_AUTH} from '../../firebase/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { UserContextInsideScreen } from '../Authentication/InsideScreen';
+
 
 export default function Main({navigation}) {
   const [visible, setVisible] = React.useState(false);
@@ -29,6 +31,10 @@ export default function Main({navigation}) {
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
+
+  const user = React.useContext(UserContextInsideScreen);
+
+  console.log("dang o route"+user?.email);
 
   return (
     <PaperProvider>
@@ -95,6 +101,7 @@ export default function Main({navigation}) {
             name="detail"
             component={showRecipeScreen}
             options={{
+              headerShown: false,
               navigation: navigation,
               headerStyle: {
                 backgroundColor: '#F87469',

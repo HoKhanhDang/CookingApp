@@ -15,16 +15,18 @@ import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where, o
 import { useEffect, useState } from "react";
 import { db } from '../../firebase/firebase';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 type RootStackParamList = {
   detail: { courseID: string };
 };
 type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'detail'>;
+
 const windowWidth = Dimensions.get('window').width - 30;
 
 export default function DetailRecipe() {
   const route = useRoute<DetailRecipeRouteProp>();
   const { courseID } = route.params;
-  console.log('courseID:', courseID);
+
   const [cities, setCities] = useState([]);
   const [cookTime, setCookTime] = useState('');
   const [detailContent, setDetailContent] = useState('');

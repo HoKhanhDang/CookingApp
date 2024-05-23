@@ -67,6 +67,7 @@ export default function MainScreen({navigation}) {
   const [cities, setCities] = useState([]);
   const [recentlyCoursesID, setRecentlyCoursesID] = useState([]);
   const [courseRecently, setCourseRecently] = useState([]);
+  
   async function getCourses() {
     try {
       const citiesCol = collection(db, "courses");

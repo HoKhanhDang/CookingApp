@@ -64,8 +64,7 @@ export default function EditAccount({navigation}) {
         }
         finally
         {      
-            setIsUpdate(!isUpdate);
-            
+            setIsUpdate(!isUpdate);          
             if (email !== oldEmail) {
                 //xóa email cũ
                 await deleteDoc(doc(FIREBASE_STORE, "accounts", oldEmail));
