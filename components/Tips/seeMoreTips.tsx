@@ -41,8 +41,13 @@ const MainComments = () => {
       console.log(cities);
     }
     async function addTip(recipeID, email, name, content) {
-      
       try {
+        if (!name) {
+          name = 'none'
+          console.error('Name is required');
+          return;
+        }
+    
         const tipsRef = collection(db, "tips");
         const q = query(tipsRef, orderBy("id", "desc"), limit(1));
         const querySnapshot = await getDocs(q);
@@ -55,7 +60,7 @@ const MainComments = () => {
           console.log(email);
           console.log(name);
           console.log(content);
-
+    
           const newTip = {
             id: maxId + 1, // Tăng ID lên 1 so với ID lớn nhất
             recipeID: recipeID,
