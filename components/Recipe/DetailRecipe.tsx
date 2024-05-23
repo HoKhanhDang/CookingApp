@@ -39,10 +39,8 @@ export default function DetailRecipe() {
     const citiesRef = collection(db, "courses");
     const q = query(citiesRef, where("id", "==", courseID));
     const querySnapshot = await getDocs(q);
-
     const cities = querySnapshot.docs.map((doc) => doc.data());
     setCities(cities);
-
     if (cities.length > 0) {
       setCookTime(cities[0].cookTime);
       setDetailContent(cities[0].detailContent);

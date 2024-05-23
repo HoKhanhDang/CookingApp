@@ -56,7 +56,6 @@ export default function SeeMore({navigation}) {
       const citySnapshot = await getDocs(citiesCol);
       const cityList = citySnapshot.docs.map((doc) => doc.data());
       setCities(cityList);
-      console.log(cities);
     } catch (e) {
       console.error("Error getting cities", e);
     }

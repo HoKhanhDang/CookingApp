@@ -10,17 +10,6 @@ import { db } from '../../firebase/firebase';
 import { useEffect, useState } from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 
-const ingredients1 = [ 
-    {name: 'Ingredient 1', quantity: 1, type: 'cup'},
-    {name: 'Ingredient 2', quantity: 2, type: 'teaspoon'},
-    {name: 'Ingredient 3', quantity: 3, type: 'tablespoon'},
-    {name: 'Ingredient 4', quantity: 4, type: 'tablespoon'},
-    {name: 'Ingredient 5', quantity: 5, type: 'teaspoon'},
-    {name: 'Ingredient 6', quantity: 6, type: 'cup'},
-    {name: 'Ingredient 7', quantity: 7, type: 'tablespoon'},
-    {name: 'Ingredient 8', quantity: 8, type: 'teaspoon'},
-    {name: 'Ingredient 9', quantity: 9, type: 'cup'},
-  ];
 
   type RootStackParamList = {
     detail: { courseID: string };
@@ -36,7 +25,6 @@ export default function Ingredients() {
   const [minID, setMinID] = useState(null);
   async function getCoursesIngredients(courseID) {
     try {
-      // Lấy dữ liệu từ bảng coursesIngredients
       const coursesIngredientsRef = collection(db, "coursesIngredients");
       const coursesIngredientsQuery = query(coursesIngredientsRef, where("recipeID", "==", courseID));
       const coursesIngredientsSnapshot = await getDocs(coursesIngredientsQuery);
@@ -46,8 +34,6 @@ export default function Ingredients() {
       }));
       const sortedDocs = cities.sort((a, b) => a.id - b.id);
       setCoursesIngredients(sortedDocs);
-  
-      // Set minID and maxID only after coursesIngredients has been populated
       if (sortedDocs.length > 0) {
         setMinID(sortedDocs[0].id);
         setMaxID(sortedDocs[sortedDocs.length - 1].id);

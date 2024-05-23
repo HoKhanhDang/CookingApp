@@ -18,17 +18,14 @@ type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'detail'>;
 export default function TipsScreen({ navigation }) {
   const route = useRoute<DetailRecipeRouteProp>();
   const { courseID } = route.params;
-  console.log('courseID:', courseID);
   const [tips, setTips] = useState([]);
 
   async function getTips(courseID) {
     const citiesRef = collection(db, "tips");
     const q = query(citiesRef, where("recipeID", "==", courseID));
     const querySnapshot = await getDocs(q);
-    console.log('courseID of tip:', courseID);
     const cities = querySnapshot.docs.map((doc) => doc.data());
     setTips(cities);
-    console.log('tip1: ', cities);
   }
 
   useEffect(() => {

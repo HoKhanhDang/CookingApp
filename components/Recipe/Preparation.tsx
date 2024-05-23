@@ -15,6 +15,7 @@ type RootStackParamList = {
 };
 type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'detail'>;
 
+
 export default function Preparation({navigation}) {
   const [instructions, setInstructions] = useState([]);
   const route = useRoute<DetailRecipeRouteProp>();
@@ -48,15 +49,12 @@ export default function Preparation({navigation}) {
     try {
       const citiesRef = collection(db, "instructions");
   
-      // Lọc theo courseID
       const courseIdQuery = query(citiesRef, where("courseID", "==", courseID));
       const courseIdSnapshot = await getDocs(courseIdQuery);
       const courseIdDocs = courseIdSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-  
-      // Sắp xếp theo step
       const sortedDocs = courseIdDocs.sort((a, b) => a.step - b.step);
   
       setInstructions(sortedDocs);
