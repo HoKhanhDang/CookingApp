@@ -29,7 +29,7 @@ export default function Recipes({ recipeName, recipeImage, navigation, id}) {
         const maxTip = querySnapshot.docs[0];
         const maxId = maxTip.data().id;
         const newTip = {
-          id: maxId + 1, // Tăng ID lên 1 so với ID lớn nhất
+          id: maxId + 1,
           courseID: courseID,
           email: email,
         };

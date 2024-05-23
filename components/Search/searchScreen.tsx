@@ -1,4 +1,4 @@
-import {Component, ReactNode} from 'react';
+import {Component, ReactNode, useState} from 'react';
 import {search} from '../../firebase/api';
 import {
   ScrollView,
@@ -10,6 +10,8 @@ import {
 import {TextInput} from 'react-native-paper';
 import Recipes from '../Recipe/Recipe';
 import {Image} from 'react-native-elements';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 const RecipesList = [
   {
@@ -48,51 +50,93 @@ const RecipesList = [
     "like": 200,
     "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/5.jpg?alt=media&token=2b4896c7-f030-41ef-9c28-626fa79b91a5"}
 ];
+type RootStackParamList = {
+  search: { courseList: any };
+};
+type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'search'>;
+const SearchScreen = ({navigation}) => {
+  const route = useRoute<DetailRecipeRouteProp>();
+  const { courseList } = route.params;
+  const [searchText, setSearchText] = useState('');
+  const [courseSearch, setCourseSearch] = useState([]);
 
-export default class SearchScreen extends Component {
-  render(): ReactNode {
-    return (
-      <View>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <View style={styles.searchBar}>
-            <TextInput
-              underlineColor="transparent"
-              activeUnderlineColor="transparent"
-              placeholder="Search for anything"
-              style={{
-                alignSelf: 'center',
-                backgroundColor: '#F0F0F0',
-                height: 40,
-                width: '100%',
-              }}
-            />
-          </View>
-          <TouchableOpacity>
-            <Image
-              style={{height: 40, width: 40, margin: 10}}
-              source={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/622/622669.png',
-              }}
-            />
-          </TouchableOpacity>
-        </View>
+  console.log('courseList:', courseList);
 
-        <Text style={styles.textTitle}>Result</Text>
-
-        <ScrollView contentContainerStyle={[styles.results]}>
-          {RecipesList.map((recipe, index) => (
-            <Recipes
-              key={index}
-              recipeName={recipe.name}
-              recipeImage={recipe.img}
-              navigation={null}
-            />
-          ))}
-        </ScrollView>
-      </View>
-    );
+  async function searchCoursesByName(searchTerm) {
+    try {
+      const db = getFirestore();
+      const coursesRef = collection(db, "courses");
+      const q = query(coursesRef, where("name", ">=", searchTerm), where("name", "<=", `${searchTerm}\uf8ff`));
+      const querySnapshot = await getDocs(q);
+      const courseList = querySnapshot.docs.map((doc) => doc.data());
+      setCourseSearch(courseList);
+      return courseList;
+    } catch (e) {
+      console.error("Error getting courses:", e);
+      throw e;
+    }
   }
-}
+
+  const handleSearch = () => {
+    searchCoursesByName(searchText);
+  };
+
+  return (
+    <View>
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={styles.searchBar}>
+          <TextInput
+            underlineColor="transparent"
+            activeUnderlineColor="transparent"
+            placeholder="Search for anything"
+            style={{
+              alignSelf: 'center',
+              backgroundColor: '#F0F0F0',
+              height: 40,
+              width: '100%',
+            }}
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+        </View>
+        <TouchableOpacity onPress={handleSearch}>
+          <Image
+            style={{ height: 40, width: 40, margin: 10 }}
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/622/622669.png',
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.textTitle}>Result</Text>
+
+      <ScrollView contentContainerStyle={[styles.results]}>
+      {courseSearch.map((recipe, index) => (
+          <Recipes
+            key={index}
+            recipeName={recipe.name}
+            recipeImage={recipe.img}
+            navigation={navigation}
+            id={recipe.id}
+          />
+        ))}
+        {courseList.map((recipe, index) => (
+          <Recipes
+            key={index}
+            recipeName={recipe.name}
+            recipeImage={recipe.img}
+            navigation={navigation}
+            id={recipe.id}
+          />
+        ))}
+        
+      </ScrollView>
+    </View>
+  );
+};
+
+
 
 const styles = StyleSheet.create({
   results: {
@@ -129,3 +173,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+export default SearchScreen;
