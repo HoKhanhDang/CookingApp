@@ -64,10 +64,11 @@ const UserProvider = ({ children, user }) => {
 
 export default function MainScreen({navigation}) {
   const user = useContext(UserContextInsideScreen);
+  const [searchTerm, setSearchTerm] = useState('');
   const [cities, setCities] = useState([]);
   const [recentlyCoursesID, setRecentlyCoursesID] = useState([]);
   const [courseRecently, setCourseRecently] = useState([]);
-  
+  const [courseSearch, setCourseSearch] = useState([]);
   async function getCourses() {
     try {
       const citiesCol = collection(db, "courses");
@@ -91,7 +92,8 @@ export default function MainScreen({navigation}) {
     } catch (e) {
       console.error("Error getting courses:", e);
     }
-  }async function fetchCoursesByID() {
+  }
+  async function fetchCoursesByID() {
     try {
       const courseIDs = recentlyCoursesID.map(item => item.courseID); // Lấy 4 giá trị đầu của recentlyCoursesID
       console.log('4 courid ', courseIDs)
@@ -117,7 +119,28 @@ export default function MainScreen({navigation}) {
       throw error;
     }
   }
+  async function searchCoursesByName(searchTerm) {
+    try {
+      const db = getFirestore();
+      const coursesRef = collection(db, "courses");
+      const q = query(coursesRef, where("name", ">=", searchTerm), where("name", "<=", `${searchTerm}\uf8ff`));
+      const querySnapshot = await getDocs(q);
+      const courseList = querySnapshot.docs.map((doc) => doc.data());
+      setCourseSearch(courseList);
+      console.log('courseSearch1: ', searchTerm);
+      console.log('courseSearch2: ', courseList);
+      navigation.navigate('search', {courseList: courseList})
+      console.log('courseSearch3: ', courseSearch);
+      return courseList;
+    } catch (e) {
+      console.error("Error getting courses:", e);
+      throw e;
+    }
+  }
   
+  const handleSearch = () => {
+    searchCoursesByName(searchTerm);
+  };
   useEffect(() => {
     getCourses();
     getRecentlyCourses(user.email);
@@ -125,6 +148,7 @@ export default function MainScreen({navigation}) {
     console.log('user in home', user.email);
     console.log('recentlyCourses: ', recentlyCoursesID);
     console.log('courseRecently: ', courseRecently);
+    console.log('courseSearch4: ', courseSearch);
   }, []);
 
   
@@ -150,9 +174,11 @@ export default function MainScreen({navigation}) {
                 height: 40,
                 width: '100%',
               }}
+              onChangeText={setSearchTerm}
+                value={searchTerm}
             />
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('search')}>
+          <TouchableOpacity onPress={handleSearch}>
             <Image
               style={{height: 40, width: 40, margin: 10}}
               source={{
