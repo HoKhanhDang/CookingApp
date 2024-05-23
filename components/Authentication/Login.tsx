@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -76,7 +76,6 @@ export default function Login ({navigation}) {
         }
 
     }
-
     return (
     
         <View style={styles.container}>

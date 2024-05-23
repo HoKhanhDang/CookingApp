@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import {
   Image,
   ScrollView,
@@ -14,6 +14,9 @@ import "firebase/firestore";
 import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where, orderBy} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from '../../firebase/firebase';
+import { UserContext} from '../main';
+import { UserContextInsideScreen } from '../Authentication/InsideScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const RecipesList = [
   {
@@ -53,7 +56,13 @@ const RecipesList = [
     "img": "https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/5.jpg?alt=media&token=2b4896c7-f030-41ef-9c28-626fa79b91a5"}
 ];
 
+export const UserContextHome1 = createContext(null);
+const UserProvider = ({ children, user }) => {
+  return <UserContextHome1.Provider value={user}>{children}</UserContextHome1.Provider>;
+};
+
 export default function MainScreen({navigation}) {
+  const user = useContext(UserContextInsideScreen);
   const [cities, setCities] = useState([]);
   async function getCourses() {
     try {
@@ -68,8 +77,13 @@ export default function MainScreen({navigation}) {
   }
   useEffect(() => {
     getCourses();
+    console.log('user in home', user.email);
   }, []);
+
+  
   return (
+    <UserProvider user={user}>
+      <SafeAreaProvider>
     <View style={[styles.conMain]}>
       <ScrollView>
         <View
@@ -172,6 +186,8 @@ export default function MainScreen({navigation}) {
         </View>
       </ScrollView>
     </View>
+    </SafeAreaProvider>
+    </UserProvider>
   );
 }
 

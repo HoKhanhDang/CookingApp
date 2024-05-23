@@ -12,11 +12,25 @@ import Account from '../Account/Account';
 import { createStackNavigator } from '@react-navigation/stack';
 import Cart from '../Cart/Cart';
 import HomeRoute from '../HomeMain/HomeRoute';
+import { createContext, useContext } from 'react';
+
+import { UserContext} from '../main';
+
+export const UserContextInsideScreen = createContext(null);
+const UserProvider = ({ children, user }) => {
+  return <UserContextInsideScreen.Provider value={user}>{children}</UserContextInsideScreen.Provider>;
+};
+
 
 const Tab = createMaterialBottomTabNavigator();
 export default function InsideScreen() {
+  
+    const user = useContext(UserContext);
+    console.log('ínidecrean: ', user);
+    
     return (
-      <SafeAreaProvider>
+      <UserProvider user={user}>
+          <SafeAreaProvider>
             <Tab.Navigator
               initialRouteName="Main"
               activeColor="#e91e63"
@@ -69,6 +83,9 @@ export default function InsideScreen() {
             </Tab.Navigator>
     
         </SafeAreaProvider>
+      </UserProvider>
+
+      
     );
   }
 
