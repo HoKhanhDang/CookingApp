@@ -50,7 +50,6 @@ export default function Register ({navigation}) {
                 setCheckconfirmPassword(false);
                 setIsNullOrEmpty(false);
 
-                console.log(password);
                 await createUserWithEmailAndPassword(auth, email, password);
       
                 const account = {

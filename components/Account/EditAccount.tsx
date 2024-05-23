@@ -1,34 +1,43 @@
 import React, { Component, useContext, useEffect, useState } from 'react';
-import {  Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View, useWindowDimensions,} from 'react-native';
+import {  Alert, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View, useWindowDimensions,} from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 
 import { UserContextInsideScreen } from '../Authentication/InsideScreen';
+import { UserContextAcc } from './Account';
 import { FIREBASE_AUTH, FIREBASE_DATABASE ,FIREBASE_STORE,FIREBASE_STORAGE, db} from '../../firebase/firebase';
 
 import { updateEmail ,updateProfile,updatePassword  } from "firebase/auth";
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { set } from 'firebase/database';
 
 export default function EditAccount({navigation}) {
 
     const auth = FIREBASE_AUTH;
     const curUser = auth.currentUser;
-
+    const [oldEmail, setOldEmail] = useState('');
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [isSetPassword, setIsSetPassword] = React.useState(false);
     const [image, setImage] = React.useState(null);
+    const [isUpdate, setIsUpdate] = React.useState(false);
+
+    const [account, setAccount] = React.useState({});
 
     const user = useContext(UserContextInsideScreen);
+    const nameContext = useContext(UserContextAcc);
 
     useEffect(() => {
-        setName(user.name);
+        setOldEmail(user.email);
         setEmail(user.email);
+        setName(nameContext);
     }, []);
 
     const handleUpdate = async () => {
-        try {
+        setIsUpdate(!isUpdate);
+        try {   
+
             if (email !== '' ) {
                 await updateEmail(curUser, email);
             }
@@ -40,22 +49,43 @@ export default function EditAccount({navigation}) {
                 }
                 setIsSetPassword(false);
             }
-        
-            const userRef = doc(FIREBASE_STORE, "accounts", email);
 
-            await updateDoc(userRef, {
+            const account = {
                 avatar: 'https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/avatar.png?alt=media&token=04783c5f-b097-40f8-a6cf-13f454e1a382', 
                 name: name, 
                 email: email 
-            });
+            }
+            const accRef = doc(FIREBASE_STORE, 'accounts', email);
+            await setDoc(accRef, account);
+
+            //xóa email cũ
+            await deleteDoc(doc(FIREBASE_STORE, "accounts", oldEmail));
             
         } catch (error) {
             console.log(error);
+            setIsUpdate(!isUpdate);
         }
         finally
-        {
-            alert('Update success');
-            navigation.popToTop()
+        {      
+            setIsUpdate(!isUpdate);
+            
+            if (email !== oldEmail) {
+                Alert.alert(
+                    'Notice',
+                    'Email has been changed, please log in again',
+                    [
+                      {
+                        text: 'OK',
+                        onPress: () => auth.signOut()
+                      }
+                    ]
+                  );
+            }
+            else{
+                alert('Update success');
+                navigation.popToTop()
+            }
+            
         }
     }
 

@@ -15,6 +15,7 @@ import { UserContextInsideScreen } from '../Authentication/InsideScreen';
 import { FIREBASE_STORE } from '../../firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { set } from 'firebase/database';
+import Login from '../Authentication/Login';
 
 const stack = createNativeStackNavigator();
 
@@ -137,15 +138,35 @@ function Account({navigation}){
         </View>
       </View>
   );
-
 }
 
+export const UserContextAcc = createContext(null);
+const UserProvider = ({ children, user }) => {
+  return <UserContextAcc.Provider value={user}>{children}</UserContextAcc.Provider>;
+};
+
 export default function AccountStack() {
+  const userContext = useContext(UserContextInsideScreen);
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    const userRef = doc(FIREBASE_STORE, "accounts", userContext.email);
+    getDoc(userRef).then((doc) => {
+      if (doc.exists()) {
+        setName(doc.data().name);
+      }}).catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  });
+
   return (
-    <stack.Navigator >
-      <stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
-      <stack.Screen name="EditAccount" component={EditAccount} />
-    </stack.Navigator>
+    <UserProvider user={name}>
+      <stack.Navigator>
+        <stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
+        <stack.Screen name="EditAccount" component={EditAccount} />
+      </stack.Navigator>
+    </UserProvider>
+      
   );
 }
 
