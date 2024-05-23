@@ -3,10 +3,15 @@ import {  Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View
 const windowWidth = Dimensions.get('window').width;
 
 import { UserContextInsideScreen } from '../Authentication/InsideScreen';
-import { FIREBASE_AUTH, FIREBASE_DATABASE ,FIREBASE_STORE,FIREBASE_STORAGE} from '../../firebase/firebase';
+import { FIREBASE_AUTH, FIREBASE_DATABASE ,FIREBASE_STORE,FIREBASE_STORAGE, db} from '../../firebase/firebase';
 
+import { updateEmail ,updateProfile,updatePassword  } from "firebase/auth";
+import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
-export default function EditAccount() {
+export default function EditAccount({navigation}) {
+
+    const auth = FIREBASE_AUTH;
+    const curUser = auth.currentUser;
 
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -14,6 +19,7 @@ export default function EditAccount() {
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [isSetPassword, setIsSetPassword] = React.useState(false);
     const [image, setImage] = React.useState(null);
+
     const user = useContext(UserContextInsideScreen);
 
     useEffect(() => {
@@ -21,7 +27,37 @@ export default function EditAccount() {
         setEmail(user.email);
     }, []);
 
+    const handleUpdate = async () => {
+        try {
+            if (email !== '' ) {
+                await updateEmail(curUser, email);
+            }
+            if (isSetPassword) {
+                if (password !== confirmPassword) {
+                    alert('Password not match');
+                } else {
+                    await updatePassword(curUser, password);
+                }
+                setIsSetPassword(false);
+            }
+        
+            const userRef = doc(FIREBASE_STORE, "accounts", email);
 
+            await updateDoc(userRef, {
+                avatar: 'https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/avatar.png?alt=media&token=04783c5f-b097-40f8-a6cf-13f454e1a382', 
+                name: name, 
+                email: email 
+            });
+            
+        } catch (error) {
+            console.log(error);
+        }
+        finally
+        {
+            alert('Update success');
+            navigation.popToTop()
+        }
+    }
 
     return (
 
@@ -42,6 +78,13 @@ export default function EditAccount() {
                 <TextInput style={[styles.input]}
                     value={name}
                     onChangeText={text => setName(text)}
+                />
+            </View>
+            <View style={styles.items}>
+                <Text style={[styles.text]}>Email</Text>
+                <TextInput style={[styles.input]}
+                    value={email}
+                    onChangeText={text => setEmail(text)}
                 />
             </View>
 
@@ -73,7 +116,7 @@ export default function EditAccount() {
                 )
             }
                     
-            <TouchableOpacity style={styles.saveButton} >
+            <TouchableOpacity style={styles.saveButton} onPress={()=>handleUpdate()}>
                 <Text style={[styles.text,{color:'red'}]}>Save</Text>
             </TouchableOpacity>
 

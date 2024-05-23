@@ -12,6 +12,9 @@ const windowWidth = Dimensions.get('window').width;
 import { useNavigation } from '@react-navigation/native';
 
 import { UserContextInsideScreen } from '../Authentication/InsideScreen';
+import { FIREBASE_STORE } from '../../firebase/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { set } from 'firebase/database';
 
 const stack = createNativeStackNavigator();
 
@@ -75,20 +78,28 @@ const renderScene = SceneMap({
   second: tab2,
 });
 
-
-
 function Account({navigation}){
-  const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'first', title: 'Saved' },
     { key: 'second', title: 'Liked' },
   ]);
 
-  const navigationn = useNavigation();
+  const [account, setAccount] = useState({});
 
-  
+  const navigationn = useNavigation();
   const userContext = useContext(UserContextInsideScreen);
+
+  useEffect(() => {
+    const userRef = doc(FIREBASE_STORE, "accounts", userContext.email);
+    getDoc(userRef).then((doc) => {
+      if (doc.exists()) {
+          setAccount(doc.data());
+      }}).catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  }
+ );
  
   return (
       
@@ -97,10 +108,10 @@ function Account({navigation}){
         <View style={[styles.conTop]}>
             <Image 
               style={[styles.picture]}
-              source={{uri: userContext.avatar}}
+              source={{uri: account.avatar}}
             />
        
-            <Text style={[styles.textName,styles.text]}>{userContext.name}</Text>
+            <Text style={[styles.textName,styles.text]}>{account.name}</Text>
             <View style={[styles.conOfLike]}>
                 <Text style={[styles.textNomo,styles.text]}>Like: 0</Text>
                 <Text style={[styles.textNomo,styles.text, styles.margin]}>Cart: 1</Text>

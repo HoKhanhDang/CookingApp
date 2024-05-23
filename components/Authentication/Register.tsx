@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebase/firebase';
 
-import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where} from "firebase/firestore";
+import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where, setDoc} from "firebase/firestore";
 import {FIREBASE_STORE} from '../../firebase/firebase';
 import { update } from 'firebase/database';
 
@@ -51,23 +51,16 @@ export default function Register ({navigation}) {
                 setIsNullOrEmpty(false);
 
                 console.log(password);
-                await createUserWithEmailAndPassword(auth,email, password);
-
-                updateProfile(auth.currentUser,{
-                    photoURL: 'https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/avatar.png?alt=media&token=04783c5f-b097-40f8-a6cf-13f454e1a382',
-                    displayName: name,
-                });
-
-        
+                await createUserWithEmailAndPassword(auth, email, password);
+      
                 const account = {
                     'name': name,
                     'email': email,
-                    'password': password,
                     'avatar' : 'https://firebasestorage.googleapis.com/v0/b/fb-cooking-app.appspot.com/o/avatar.png?alt=media&token=04783c5f-b097-40f8-a6cf-13f454e1a382',
                 }
 
-                const acc = collection(FIREBASE_STORE,'accounts');
-                await addDoc(acc,account);
+                const accRef = doc(FIREBASE_STORE, 'accounts', email);
+                await setDoc(accRef, account);
 
                 setIsLoading(false);             
             }
