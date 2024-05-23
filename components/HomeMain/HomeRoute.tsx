@@ -102,7 +102,6 @@ export default function Main({navigation}) {
             component={showRecipeScreen}
             options={{
               headerShown: false,
-              navigation: navigation,
               headerStyle: {
                 backgroundColor: '#F87469',
               },

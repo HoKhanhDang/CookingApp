@@ -42,9 +42,7 @@ export default function Recipes({ recipeName, recipeImage, navigation, id}) {
     savedRecentlyCourse(user.email, id);
     navigation.navigate('detail', { courseID: id });
   };
-  useEffect(() => {
-    console.log('user in recipe: ', user)
-  }, []);
+  
   return (
     <TouchableOpacity
       style={[styles.con]}

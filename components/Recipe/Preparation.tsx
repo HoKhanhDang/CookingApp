@@ -19,7 +19,6 @@ export default function Preparation({navigation}) {
   const [instructions, setInstructions] = useState([]);
   const route = useRoute<DetailRecipeRouteProp>();
   const { courseID } = route.params;
-  console.log('courseID:', courseID);
   const [cities, setCities] = useState([]);
   const [cookTime, setCookTime] = useState('');
   const [detailContent, setDetailContent] = useState('');
@@ -61,7 +60,6 @@ export default function Preparation({navigation}) {
       const sortedDocs = courseIdDocs.sort((a, b) => a.step - b.step);
   
       setInstructions(sortedDocs);
-      console.log(sortedDocs);
     } catch (e) {
       console.error("Error getting instructions", e);
     }

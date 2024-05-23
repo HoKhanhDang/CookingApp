@@ -75,7 +75,6 @@ export default function MainScreen({navigation}) {
       const citySnapshot = await getDocs(citiesCol);
       const cityList = citySnapshot.docs.map((doc) => doc.data());
       setCities(cityList);
-      console.log(cities);
     } catch (e) {
       console.error("Error getting cities", e);
     }
@@ -88,7 +87,6 @@ export default function MainScreen({navigation}) {
       const courseList = querySnapshot.docs.map((doc) => doc.data());
   
       setCourseRecently(courseList);
-      console.log(courseList);
     } catch (e) {
       console.error("Error getting courses:", e);
     }
@@ -96,7 +94,6 @@ export default function MainScreen({navigation}) {
   async function fetchCoursesByID() {
     try {
       const courseIDs = recentlyCoursesID.map(item => item.courseID); // Lấy 4 giá trị đầu của recentlyCoursesID
-      console.log('4 courid ', courseIDs)
       for (const courseID of courseIDs) {
         await getCoursesByID(courseID);
       }
@@ -111,7 +108,6 @@ export default function MainScreen({navigation}) {
       const q = query(citiesRef, where('email', '==', emailUser));
       const querySnapshot = await getDocs(q);
       const cities = querySnapshot.docs.map((doc) => doc.data());
-      console.log('test1 : ', cities)
       setRecentlyCoursesID(cities);
       
     } catch (error) {
@@ -127,28 +123,24 @@ export default function MainScreen({navigation}) {
       const querySnapshot = await getDocs(q);
       const courseList = querySnapshot.docs.map((doc) => doc.data());
       setCourseSearch(courseList);
-      console.log('courseSearch1: ', searchTerm);
-      console.log('courseSearch2: ', courseList);
       navigation.navigate('search', {courseList: courseList})
-      console.log('courseSearch3: ', courseSearch);
+
       return courseList;
     } catch (e) {
       console.error("Error getting courses:", e);
       throw e;
     }
   }
+
   
   const handleSearch = () => {
     searchCoursesByName(searchTerm);
   };
+
   useEffect(() => {
     getCourses();
     getRecentlyCourses(user.email);
     fetchCoursesByID();
-    console.log('user in home', user.email);
-    console.log('recentlyCourses: ', recentlyCoursesID);
-    console.log('courseRecently: ', courseRecently);
-    console.log('courseSearch4: ', courseSearch);
   }, []);
 
   
