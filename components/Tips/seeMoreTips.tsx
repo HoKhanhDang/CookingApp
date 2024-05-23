@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import Tips from './Tip';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where, orderBy} from "firebase/firestore";
+import { getFirestore, collection, getDocs ,addDoc, doc, getDoc, query, where, orderBy, limit} from "firebase/firestore";
 import { useEffect } from "react";
 import { db } from '../../firebase/firebase';
+import { UserContextHome1 } from '../HomeMain/Home';
+import { UserContextInsideScreen } from '../Authentication/InsideScreen';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,9 +25,11 @@ type RootStackParamList = {
 type DetailRecipeRouteProp = RouteProp<RootStackParamList, 'detail'>;
 
 const MainComments = () => {
+  const user1 = useContext(UserContextInsideScreen);
+  const user = useContext(UserContextHome1);
   const route = useRoute<DetailRecipeRouteProp>();
     const { courseID } = route.params;
-    console.log('courseID:', courseID);
+    console.log('courseID in seemoretip:', courseID);
     const [tips, setTips] = useState([]);
     async function getTips(courseID) {
       const citiesRef = collection(db, "tips");
@@ -36,8 +40,52 @@ const MainComments = () => {
       setTips(cities);
       console.log(cities);
     }
+    async function addTip(recipeID, email, name, content) {
+      try {
+        if (!name) {
+          name = 'none'
+          console.error('Name is required');
+          return;
+        }
+    
+        const tipsRef = collection(db, "tips");
+        const q = query(tipsRef, orderBy("id", "desc"), limit(1));
+        const querySnapshot = await getDocs(q);
+    
+        if (!querySnapshot.empty) {
+          const maxTip = querySnapshot.docs[0];
+          const maxId = maxTip.data().id;
+          console.log('maxID', maxId);
+          console.log(recipeID);
+          console.log(email);
+          console.log(name);
+          console.log(content);
+    
+          const newTip = {
+            id: maxId + 1, // Tăng ID lên 1 so với ID lớn nhất
+            recipeID: recipeID,
+            email: email,
+            name: name,
+            content: content,
+          };
+          await addDoc(tipsRef, newTip);
+        }
+      } catch (error) {
+        console.error("Error getting max tips ID:", error);
+        throw error;
+      }
+    }
+    const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (text) => {
+    setInputValue(text);
+  };
+  
     useEffect(() => {
       getTips(courseID);
+      console.log('user1 in seemoretip: ', user1)
+      console.log('user in seemoretip: ', user)
+      
     }, [courseID]);
   return (
     <View style={{ flex: 1, flexDirection: 'column', padding: 10 }}>
@@ -61,13 +109,25 @@ const MainComments = () => {
           padding: 10,
         }}>
         <TextInput
+        
           style={{
             width: '70%',
             borderColor: 'black',
             borderRadius: 30,
             borderWidth: 1,
-          }}></TextInput>
-        <TouchableOpacity style={styles.tipsButton}>
+          }}
+          onChangeText={handleInputChange}
+        value={inputValue}
+          ></TextInput>
+        <TouchableOpacity style={styles.tipsButton} onPress={async () => {
+    try {
+      await addTip(courseID, user1.email, user1.name, inputValue);
+      setInputValue('');
+      getTips(courseID);
+    } catch (error) {
+      console.error("Error adding tip:", error);
+    }
+  }}>
           <Text style={{ fontSize: 20 }}>Post</Text>
         </TouchableOpacity>
       </View>
